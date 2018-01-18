@@ -1,6 +1,7 @@
 notifications:
     email: false
 language: java
+deploy:
     skip_cleanup: true 
     provider: heroku 
     app: pruebasJdbc
