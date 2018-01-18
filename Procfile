@@ -1,0 +1,1 @@
+web: java -jar ./target/pruebasJdbc-0.0.1-jar-with-dependencies.jar 
