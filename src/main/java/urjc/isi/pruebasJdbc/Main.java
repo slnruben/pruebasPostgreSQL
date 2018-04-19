@@ -105,7 +105,7 @@ public class Main {
 				Statement statement = connection.createStatement();
 				statement.setQueryTimeout(30); // set timeout to 30 sec.
 				statement.executeUpdate("drop table if exists films");
-				statement.executeUpdate("create table films (film string, actor string)");
+				statement.executeUpdate("create table films (film VARCHAR (255), actor VARCHAR (255))");
 
 				// Read contents of input stream that holds the uploaded file
 				InputStreamReader isr = new InputStreamReader(input);
