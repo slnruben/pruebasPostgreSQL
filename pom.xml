@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>urjc.isi</groupId>
-  <artifactId>pruebasJdbc</artifactId>
+  <artifactId>pruebasPostgreSQL</artifactId>
   <version>0.0.1</version>
   <packaging>jar</packaging>
 
-  <name>pruebasJdbc</name>
+  <name>pruebasPostgreSQL</name>
   <url>http://maven.apache.org</url>
 
   <properties>
@@ -27,7 +27,7 @@
     	<version>2.5</version>
     </dependency>
     <dependency>
-    	<groupId>postgresq</groupId>
+    	<groupId>postgresql</groupId>
     	<artifactId>postgresql</artifactId>
     	<version>9.0-801.jdbc4</version>
     </dependency>
@@ -71,10 +71,10 @@
         <version>0.4.4</version>
         <configuration>
           <jdkVersion>1.8</jdkVersion>
-          <appName>pruebasJdbc</appName>
+          <appName>pruebasPostgreSQL</appName>
           <processTypes>
             <!-- Tell Heroku how to launch your application -->
-            <web>java -jar ./target/pruebasJdbc-0.0.1-jar-with-dependencies.jar</web>
+            <web>java -jar ./target/pruebasPostgreSQL-0.0.1-jar-with-dependencies.jar</web>
           </processTypes>
         </configuration>
       </plugin>
