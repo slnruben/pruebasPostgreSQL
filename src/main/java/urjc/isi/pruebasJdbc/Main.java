@@ -74,7 +74,7 @@ public class Main {
 
 		// Connect to SQLite sample.db database
 		// connection will be reused by every query in this simplistic example
-		connection = DriverManager.getConnection("jdbc:sqlite:sample.db");
+		connection = DriverManager.getConnection("jdbc:postgresql:sample.db");
 
 		// In this case we use a Java 8 method reference to specify
 		// the method to be called when a GET /:table/:film HTTP request
