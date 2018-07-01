@@ -60,7 +60,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>urjc.isi.pruebasJdbc.Main</mainClass>
+              <mainClass>urjc.isi.pruebasPostgreSQL.Main</mainClass>
             </manifest>
           </archive>
         </configuration>
