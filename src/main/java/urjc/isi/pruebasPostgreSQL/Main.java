@@ -1,4 +1,4 @@
-package urjc.isi.pruebasJdbc;
+package urjc.isi.pruebasPostgreSQL;
 
 import static spark.Spark.*;
 import spark.Request;
@@ -105,7 +105,7 @@ public class Main {
 				Statement statement = connection.createStatement();
 				statement.setQueryTimeout(30); // set timeout to 30 sec.
 				statement.executeUpdate("drop table if exists films");
-				statement.executeUpdate("create table films (film VARCHAR (255), actor VARCHAR (255))");
+				statement.executeUpdate("create table films (film text, actor text)");
 
 				// Read contents of input stream that holds the uploaded file
 				InputStreamReader isr = new InputStreamReader(input);
