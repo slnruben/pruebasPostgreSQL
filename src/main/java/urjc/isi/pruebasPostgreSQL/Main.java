@@ -10,11 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-
 import java.util.StringTokenizer;
-
 import javax.servlet.MultipartConfigElement;
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,7 +72,14 @@ public class Main {
 		// Connect to SQLite sample.db database
 		// connection will be reused by every query in this simplistic example
 		Class.forName("org.postgresql.Driver");
-		connection = DriverManager.getConnection("jdbc:postgresql:sample.db");
+		try {
+			connection = DriverManager.getConnection("jdbc:postgresql:sample.db");
+		} catch (SQLException e) {
+
+			System.out.println("Connection Failed!! Check output console");
+			e.printStackTrace();
+		}
+		
 
 		// In this case we use a Java 8 method reference to specify
 		// the method to be called when a GET /:table/:film HTTP request
@@ -137,6 +141,7 @@ public class Main {
 		if (processBuilder.environment().get("PORT") != null) {
 			return Integer.parseInt(processBuilder.environment().get("PORT"));
 		}
+		//return 5432;
 		return 4567; // return default port if heroku-port isn't set (i.e. on localhost)
 	}
 }
