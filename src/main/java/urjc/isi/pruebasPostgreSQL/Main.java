@@ -103,10 +103,12 @@ public class Main {
 			System.out.println("/upload");
 			req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/tmp"));
 			String result = "File uploaded!";
+			System.out.println("InputStream");
 			try (InputStream input = req.raw().getPart("uploaded_films_file").getInputStream()) {
 				// getPart needs to use the same name "uploaded_films_file" used in the form
 
 				// Prepare SQL to create table
+				System.out.println("connection");
 				Statement statement = connection.createStatement();
 				statement.setQueryTimeout(30); // set timeout to 30 sec.
 				System.out.println("DROP TABLE");
