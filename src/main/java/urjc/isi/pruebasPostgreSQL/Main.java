@@ -100,6 +100,7 @@ public class Main {
 		// Retrieves the file uploaded through the /upload_films HTML form
 		// Creates table and stores uploaded file in a two-columns table
 		post("/upload", (req, res) -> {
+			System.out.println("/upload");
 			req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/tmp"));
 			String result = "File uploaded!";
 			try (InputStream input = req.raw().getPart("uploaded_films_file").getInputStream()) {
