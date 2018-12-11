@@ -99,6 +99,8 @@ public class Main {
 		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
+		System.out.println("NOMBRE: " + params.get("Nombre"));
+		System.out.println("APELLIDOS: " + params.get("Apellidos"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Nombre"));
 			pstmt.setString(2, params.get("Apellidos"));
@@ -145,9 +147,10 @@ public class Main {
 		return success;
     }
     
-	public static String doRegister(Request request, Response response) {
-		String success = "0";
+	public static String doRegister(Request request, Response response) throws SQLException {
+		String last_inserted_id = "-1";
 		
+		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
 		System.out.println("Datos: " + params.get("Usuario") + "|"  + params.get("Sueldo"));
@@ -156,7 +159,7 @@ public class Main {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				if (rs.getInt(1) != 0) {
-					success = "0";
+					last_inserted_id = "-1";
 				} else {
 					
 					sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
@@ -164,7 +167,11 @@ public class Main {
 						pstmt2.setString(1, params.get("Usuario"));
 						pstmt2.setString(2, params.get("Sueldo").toString());
 						pstmt2.executeUpdate();
-						success = "1";
+						ResultSet rs2 = pstmt2.getGeneratedKeys();
+		                if(rs2.next())
+		                {
+		                    last_inserted_id = String.valueOf(rs.getInt(1));
+		                }
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
 					}
@@ -173,7 +180,7 @@ public class Main {
 		} catch (SQLException e) {
 			System.out.println("ERROR2: " + e.getMessage());
 		}
-		return success;
+		return last_inserted_id;
 	}
 	
 	public static String doCreateBBDD(Request request, Response response) {
@@ -181,7 +188,6 @@ public class Main {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate("drop table if exists users");
-			statement.executeUpdate("drop table if exists films");
 			statement.executeUpdate("create table users (Usuario text, Nombre text, "
 					+ "Apellidos text, Email text, Telefono text, Trabajo text,"
 					+ "Empresa text, Sueldo text, Universidad text, Carrera text,"
