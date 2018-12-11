@@ -54,11 +54,12 @@ public class Main {
     
     // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
-    public static String doSelect(Request request, Response response) throws JSONException {
+    public static String doSelect(Request request, Response response) throws JSONException, SQLException {
     	String success = "0";
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
+		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM users WHERE Usuario=?");
 		System.out.println("Datos: " + params.get("Usuario") + "|");
@@ -88,14 +89,12 @@ public class Main {
 			System.out.println("ERROR: " + e.getMessage());
 		}
 		return success;
-    	/**
-	return select (connection, request.params(":table"), 
-		       request.params(":film"));*/
     }
     
-    public static String doUpdateUser(Request request, Response response) {
+    public static String doUpdateUser(Request request, Response response) throws SQLException {
 		String success = "0";
 		
+		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
@@ -123,6 +122,29 @@ public class Main {
 		return success;
 	}
 	
+    public static String doLogin(Request request, Response response) throws JSONException, SQLException {
+    	String success = "0";
+		
+		connection.setAutoCommit(true);
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT count(*) FROM users WHERE Usuario=?");
+		System.out.println("Datos: " + params.get("Usuario") + "|");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Usuario"));
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) {
+				if (rs.getInt(1) != 0) {
+					success = "1";
+				} else {
+					success = "0";
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		return success;
+    }
+    
 	public static String doRegister(Request request, Response response) {
 		String success = "0";
 		
@@ -234,7 +256,11 @@ public class Main {
 	
 	get("/register", Main::doRegister);
 	
+	get("/login", Main::doLogin);
+	
 	post("/register", Main::doRegister);
+	
+	post("/login", Main::doLogin);
 	
 	post("/update_user", Main::doUpdateUser);
 	
