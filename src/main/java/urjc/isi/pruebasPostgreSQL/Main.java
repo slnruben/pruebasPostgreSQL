@@ -100,7 +100,7 @@ public class Main {
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
 		System.out.println("NOMBRE: " + params.get("Nombre"));
-		System.out.println("APELLIDOS: " + params.get("Apellidos"));
+		System.out.println(params.get("Apellidos"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Nombre"));
 			pstmt.setString(2, params.get("Apellidos"));
@@ -157,11 +157,14 @@ public class Main {
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
+			System.out.println("LEER");
 			if (rs.next()) {
+				System.out.println("ENTRAR");
 				if (rs.getInt(1) != 0) {
+					System.out.println("REPETIDO: " + rs.getInt(1));
 					last_inserted_id = "-1";
 				} else {
-					
+					System.out.println("INSERTAR");
 					sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
 					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
 						pstmt2.setString(1, params.get("Usuario"));
@@ -171,6 +174,7 @@ public class Main {
 		                if(rs2.next())
 		                {
 		                    last_inserted_id = String.valueOf(rs.getInt(1));
+		                    System.out.println(last_inserted_id);
 		                }
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
