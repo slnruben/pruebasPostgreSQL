@@ -230,6 +230,10 @@ public class Main {
 
 	get("/create_bbdd", Main::doCreateBBDD);
 	
+	get("/search_contacts", Main::doSelect);
+	
+	get("/register", Main::doRegister);
+	
 	post("/register", Main::doRegister);
 	
 	post("/update_user", Main::doUpdateUser);
