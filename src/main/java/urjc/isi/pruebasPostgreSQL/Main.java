@@ -10,10 +10,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import javax.servlet.MultipartConfigElement;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -32,12 +36,138 @@ public class Main {
     // and select methods.  Initialized in main
     private static Connection connection;
 
+    private static HashMap<String, String> getRequestData(Request request) {
+		//System.out.println(request.body());
+		String[] aux1 = request.body().split("&");
+		HashMap<String, String> params = new HashMap<>();
+		String[] aux2;
+		for (String item: aux1) {
+			aux2 = item.split("=");
+			if (aux2.length == 1) {
+				params.put(aux2[0], "");
+			} else {
+				params.put(aux2[0], aux2[1]);
+			}
+		}
+		return params;
+	}
+    
     // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
-    public static String doSelect(Request request, Response response) {
+    public static String doSelect(Request request, Response response) throws JSONException {
+    	String success = "0";
+		JSONArray jsonArr = new JSONArray();
+		JSONObject json;
+		
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT * FROM users");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				json = new JSONObject();
+				json.put("Nombre", rs.getString("Nombre"));
+				json.put("Apellidos", rs.getString("Apellidos"));
+				json.put("Email", rs.getString("Email"));
+				json.put("Telefono", rs.getString("Telefono"));
+				json.put("Trabajo", rs.getString("Trabajo"));
+				json.put("Empresa", rs.getString("Empresa"));
+				json.put("Sueldo", rs.getString("Sueldo"));
+				json.put("Universidad", rs.getString("Universidad"));
+				json.put("Carrera", rs.getString("Carrera"));
+				json.put("Sector1", rs.getString("Sector1"));
+				json.put("Sector2", rs.getString("Sector2"));
+				json.put("Experiencia", rs.getString("Experiencia"));
+				json.put("Lenguajes", rs.getString("Lenguajes"));
+				json.put("Conocimientos", rs.getString("Conocimientos"));
+				jsonArr.put(json);
+				System.out.println(jsonArr.toString());
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		return success;
+    	/**
 	return select (connection, request.params(":table"), 
-		       request.params(":film"));
+		       request.params(":film"));*/
     }
+    
+    public static String doUpdateUser(Request request, Response response) {
+		String success = "0";
+		
+		HashMap<String, String> params = getRequestData(request);
+		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
+						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
+						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Nombre"));
+			pstmt.setString(2, params.get("Apellidos"));
+			pstmt.setString(3, params.get("Email"));
+			pstmt.setString(4, params.get("Telefono"));
+			pstmt.setString(5, params.get("Trabajo"));
+			pstmt.setString(6, params.get("Empresa"));
+			pstmt.setString(7, params.get("Sueldo"));
+			pstmt.setString(8, params.get("Universidad"));
+			pstmt.setString(9, params.get("Carrera"));
+			pstmt.setString(10, params.get("Sector1"));
+			pstmt.setString(11, params.get("Sector2"));
+			pstmt.setString(12, params.get("Experiencia"));
+			pstmt.setString(13, params.get("Lenguajes"));
+			pstmt.setString(14, params.get("Conocimientos"));
+			pstmt.setString(15, params.get("Usuario"));
+			success = Integer.toString(pstmt.executeUpdate());
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		return success;
+	}
+	
+	public static String doRegister(Request request, Response response) {
+		String success = "0";
+		
+		HashMap<String, String> params = getRequestData(request);
+		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Usuario"));
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.getInt(1) != 0) {
+				success = "0";
+			} else {
+				
+				sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
+				try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
+					pstmt2.setString(1, params.get("Usuario"));
+					pstmt2.setString(2, params.get("Sueldo").toString());
+					pstmt2.executeUpdate();
+					success = "1";
+				} catch (SQLException e) {
+					System.out.println("ERROR1: " + e.getMessage());
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR2: " + e.getMessage());
+		}
+		return success;
+	}
+	
+	public static String doCreateBBDD(Request request, Response response) {
+		Statement statement;
+		try {
+			statement = connection.createStatement();
+			statement.setQueryTimeout(30); // set timeout to 30 sec.
+			statement.executeUpdate("drop table if exists users");
+			statement.executeUpdate("drop table if exists films");
+			statement.executeUpdate("create table users (Usuario text, Nombre text, "
+					+ "Apellidos text, Email text, Telefono text, Trabajo text,"
+					+ "Empresa text, Sueldo text, Universidad text, Carrera text,"
+					+ "Sector1 text, Sector2 text, Experiencia text, Lenguajes text,"
+					+ "Conocimientos text)");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return e.toString();
+		}
+		return "1";
+	}
 
     public static String select(Connection conn, String table, String film) {
 	String sql = "SELECT * FROM " + table + " WHERE film=?";
@@ -94,6 +224,13 @@ public class Main {
         // Set it to false to improve performance
 	connection.setAutoCommit(false);
 
+	get("/create_bbdd", Main::doCreateBBDD);
+	
+	post("/register", Main::doRegister);
+	
+	post("/update_user", Main::doUpdateUser);
+	
+	post("/search_contacts", Main::doSelect);
 
 	// In this case we use a Java 8 method reference to specify
 	// the method to be called when a GET /:table/:film HTTP request
