@@ -154,7 +154,7 @@ public class Main {
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
 		System.out.println("Datos: " + params.get("Usuario") + "|"  + params.get("Sueldo"));
-		try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+		try (PreparedStatement pstmt = connection.prepareStatement(sql/*, Statement.RETURN_GENERATED_KEYS*/)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
 			System.out.println("LEER");
@@ -170,6 +170,7 @@ public class Main {
 						pstmt2.setString(1, params.get("Usuario"));
 						pstmt2.setString(2, params.get("Sueldo").toString());
 						pstmt2.executeUpdate();
+						last_inserted_id = "1";
 						ResultSet rs2 = pstmt2.getGeneratedKeys();
 		                if(rs2.next())
 		                {
