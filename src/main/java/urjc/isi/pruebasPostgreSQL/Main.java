@@ -153,7 +153,6 @@ public class Main {
 		Statement statement;
 		try {
 			statement = connection.createStatement();
-			statement.setQueryTimeout(30); // set timeout to 30 sec.
 			statement.executeUpdate("drop table if exists users");
 			statement.executeUpdate("drop table if exists films");
 			statement.executeUpdate("create table users (Usuario text, Nombre text, "
