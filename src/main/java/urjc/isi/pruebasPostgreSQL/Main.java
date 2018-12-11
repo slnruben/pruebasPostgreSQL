@@ -176,6 +176,7 @@ public class Main {
 		                    last_inserted_id = String.valueOf(rs.getInt(1));
 		                    System.out.println(last_inserted_id);
 		                }
+		                System.out.println("INSERTADO");
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
 					}
