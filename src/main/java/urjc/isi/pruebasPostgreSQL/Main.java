@@ -154,7 +154,7 @@ public class Main {
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
 		System.out.println("Datos: " + params.get("Usuario") + "|"  + params.get("Sueldo"));
-		try (PreparedStatement pstmt = connection.prepareStatement(sql/*, Statement.RETURN_GENERATED_KEYS*/)) {
+		try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
 			System.out.println("LEER");
@@ -194,7 +194,7 @@ public class Main {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate("drop table if exists users");
-			statement.executeUpdate("create table users (Usuario text, Nombre text, "
+			statement.executeUpdate("create table users (id SERIAL PRIMARY KEY, Usuario text, Nombre text, "
 					+ "Apellidos text, Email text, Telefono text, Trabajo text,"
 					+ "Empresa text, Sueldo text, Universidad text, Carrera text,"
 					+ "Sector1 text, Sector2 text, Experiencia text, Lenguajes text,"
