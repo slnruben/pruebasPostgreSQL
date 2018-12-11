@@ -132,18 +132,20 @@ public class Main {
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
-			if (rs.getInt(1) != 0) {
-				success = "0";
-			} else {
-				
-				sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
-				try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
-					pstmt2.setString(1, params.get("Usuario"));
-					pstmt2.setString(2, params.get("Sueldo").toString());
-					pstmt2.executeUpdate();
-					success = "1";
-				} catch (SQLException e) {
-					System.out.println("ERROR1: " + e.getMessage());
+			if (rs.next()) {
+				if (rs.getInt(1) != 0) {
+					success = "0";
+				} else {
+					
+					sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
+					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
+						pstmt2.setString(1, params.get("Usuario"));
+						pstmt2.setString(2, params.get("Sueldo").toString());
+						pstmt2.executeUpdate();
+						success = "1";
+					} catch (SQLException e) {
+						System.out.println("ERROR1: " + e.getMessage());
+					}
 				}
 			}
 		} catch (SQLException e) {
