@@ -60,8 +60,10 @@ public class Main {
 		JSONObject json;
 		
 		HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT * FROM users");
+		String sql = ("SELECT * FROM users WHERE Usuario=?");
+		System.out.println("Datos: " + params.get("Usuario") + "|");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
@@ -126,6 +128,7 @@ public class Main {
 		
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
+		System.out.println("Datos: " + params.get("Usuario") + "|"  + params.get("Sueldo"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
