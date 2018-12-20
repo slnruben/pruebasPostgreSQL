@@ -72,10 +72,9 @@ public class Main {
 		sector1 = params.get("Sector1");
 		sector2 = params.get("Sector2");
 		conocimientos = params.get("Conocimientos");
+		System.out.println(sueldo + "|" + trabajo + "|" + sector1 + "|" + sector2 + "|" + conocimientos);
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
-			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
-					+ "OR Sector2=? OR Conocimientos=?");
 			
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 				pstmt.setString(1, params.get("Sueldo"));
@@ -85,7 +84,7 @@ public class Main {
 				pstmt.setString(5, params.get("Conocimientos"));
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					System.out.println("Damos vuelta");
+					System.out.println("Damos vuelta 1");
 					json = new JSONObject();
 					json.put("Nombre", rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
@@ -111,9 +110,11 @@ public class Main {
 		}
 		
 		try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
+			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
+					+ "OR Sector2=? OR Conocimientos=?");
 			ResultSet rs2 = pstmt2.executeQuery();
 			while (rs2.next()) {
-				System.out.println("Damos vuelta");
+				System.out.println("Damos vuelta 2");
 				json = new JSONObject();
 				json.put("Nombre", rs2.getString("Nombre"));
 				json.put("Apellidos", rs2.getString("Apellidos"));
@@ -188,7 +189,6 @@ public class Main {
 		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
-		System.out.println("NOMBRE: " + params.get("Nombre"));
 		System.out.println(params.get("Apellidos"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Nombre"));
@@ -244,9 +244,7 @@ public class Main {
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
-			System.out.println("LEER");
 			if (rs.next()) {
-				System.out.println("ENTRAR");
 				if (rs.getInt(1) != 0) {
 					System.out.println("REPETIDO: " + rs.getInt(1));
 					last_inserted_id = "-1";
@@ -260,7 +258,6 @@ public class Main {
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
 					}
-					System.out.println("COJO ULTIMO ID");
 					sql = "SELECT id FROM users WHERE Usuario=?";
 					try (PreparedStatement pstmt3 = connection.prepareStatement(sql)) {
 						pstmt3.setString(1, params.get("Usuario"));
