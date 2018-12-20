@@ -76,14 +76,40 @@ public class Main {
 				&& "".equals(conocimientos)) {
 			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
 					+ "OR Sector2=? OR Conocimientos=?");
+			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+				pstmt.setString(1, params.get("Sueldo"));
+				pstmt.setString(2, params.get("Trabajo"));
+				pstmt.setString(3, params.get("Sector1"));
+				pstmt.setString(4, params.get("Sector2"));
+				pstmt.setString(5, params.get("Conocimientos"));
+				ResultSet rs = pstmt.executeQuery();
+				while (rs.next()) {
+					System.out.println("Damos vuelta");
+					json = new JSONObject();
+					json.put("Nombre", rs.getString("Nombre"));
+					json.put("Apellidos", rs.getString("Apellidos"));
+					json.put("Email", rs.getString("Email"));
+					json.put("Telefono", rs.getString("Telefono"));
+					json.put("Trabajo", rs.getString("Trabajo"));
+					json.put("Empresa", rs.getString("Empresa"));
+					json.put("Sueldo", rs.getString("Sueldo"));
+					json.put("Universidad", rs.getString("Universidad"));
+					json.put("Carrera", rs.getString("Carrera"));
+					json.put("Sector1", rs.getString("Sector1"));
+					json.put("Sector2", rs.getString("Sector2"));
+					json.put("Experiencia", rs.getString("Experiencia"));
+					json.put("Lenguajes", rs.getString("Lenguajes"));
+					json.put("Conocimientos", rs.getString("Conocimientos"));
+					jsonArr.put(json);	
+				}
+				success = "1";
+			} catch (SQLException e) {
+				System.out.println("ERROR1: " + e.getMessage());
+				success = "-1";
+			}
 		}
 		
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, params.get("Sueldo"));
-			pstmt.setString(2, params.get("Trabajo"));
-			pstmt.setString(3, params.get("Sector1"));
-			pstmt.setString(4, params.get("Sector2"));
-			pstmt.setString(5, params.get("Conocimientos"));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				System.out.println("Damos vuelta");
@@ -106,7 +132,7 @@ public class Main {
 			}
 			success = "1";
 		} catch (SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
+			System.out.println("ERROR2: " + e.getMessage());
 			success = "-1";
 		}
 		System.out.println(jsonArr.toString());
