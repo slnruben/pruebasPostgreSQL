@@ -64,7 +64,11 @@ public class Main {
 		String sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
 				+ "OR Sector2=? OR Conocimientos=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, params.get("Usuario"));
+			pstmt.setString(1, params.get("Sueldo"));
+			pstmt.setString(1, params.get("Trabajo"));
+			pstmt.setString(1, params.get("Sector1"));
+			pstmt.setString(1, params.get("Sector2"));
+			pstmt.setString(1, params.get("Conocimientos"));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
