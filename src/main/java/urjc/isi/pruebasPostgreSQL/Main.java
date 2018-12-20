@@ -55,14 +55,29 @@ public class Main {
     // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
     public static String doSelect(Request request, Response response) throws JSONException, SQLException {
+    	String sql = ("SELECT * FROM users");
     	String success = "0";
+    	String sueldo;
+    	String trabajo;
+    	String sector1;
+    	String sector2;
+    	String conocimientos;
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
-				+ "OR Sector2=? OR Conocimientos=?");
+		sueldo = params.get("Sueldo");
+		trabajo = params.get("Trabajo");
+		sector1 = params.get("Sector1");
+		sector2 = params.get("Sector2");
+		conocimientos = params.get("Conocimientos");
+		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
+				&& "".equals(conocimientos)) {
+			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
+					+ "OR Sector2=? OR Conocimientos=?");
+		}
+		
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Sueldo"));
 			pstmt.setString(2, params.get("Trabajo"));
@@ -71,6 +86,7 @@ public class Main {
 			pstmt.setString(5, params.get("Conocimientos"));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
+				System.out.println("Damos vuelta");
 				json = new JSONObject();
 				json.put("Nombre", rs.getString("Nombre"));
 				json.put("Apellidos", rs.getString("Apellidos"));
@@ -86,12 +102,14 @@ public class Main {
 				json.put("Experiencia", rs.getString("Experiencia"));
 				json.put("Lenguajes", rs.getString("Lenguajes"));
 				json.put("Conocimientos", rs.getString("Conocimientos"));
-				jsonArr.put(json);
-				System.out.println(jsonArr.toString());
+				jsonArr.put(json);	
 			}
+			success = "1";
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
+			success = "-1";
 		}
+		System.out.println(jsonArr.toString());
 		return success;
     }
     
