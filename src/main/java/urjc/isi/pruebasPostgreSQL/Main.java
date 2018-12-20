@@ -154,7 +154,7 @@ public class Main {
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
 		System.out.println("Datos: " + params.get("Usuario") + "|"  + params.get("Sueldo"));
-		try (PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
 			System.out.println("LEER");
@@ -170,22 +170,25 @@ public class Main {
 						pstmt2.setString(1, params.get("Usuario"));
 						pstmt2.setString(2, params.get("Sueldo").toString());
 						pstmt2.executeUpdate();
-						last_inserted_id = "1";
-						ResultSet rs2 = pstmt2.getGeneratedKeys();
-		                if(rs2.next())
-		                {
-		                    last_inserted_id = String.valueOf(rs.getInt(1));
-		                    System.out.println(last_inserted_id);
-		                }
-		                System.out.println("INSERTADO");
+						sql = "SELECT id FROM users WHERE Usuario=?";		
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
+					}
+					try (PreparedStatement pstmt3 = connection.prepareStatement(sql)) {
+						pstmt3.setString(1, params.get("Usuario"));
+						ResultSet rs3 = pstmt.executeQuery();
+						if (rs3.next()) {
+							last_inserted_id = String.valueOf(rs3.getInt(1));
+						}
+					} catch (SQLException e) {
+						System.out.println("ERROR2: " + e.getMessage());
 					}
 				}
 			}
 		} catch (SQLException e) {
-			System.out.println("ERROR2: " + e.getMessage());
+			System.out.println("ERROR3: " + e.getMessage());
 		}
+		System.out.println("INSERTED: " + last_inserted_id);
 		return last_inserted_id;
 	}
 	
