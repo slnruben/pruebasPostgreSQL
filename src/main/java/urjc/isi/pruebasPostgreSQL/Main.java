@@ -77,11 +77,6 @@ public class Main {
 				&& "".equals(conocimientos)) {
 			
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-				pstmt.setString(1, params.get("Sueldo"));
-				pstmt.setString(2, params.get("Trabajo"));
-				pstmt.setString(3, params.get("Sector1"));
-				pstmt.setString(4, params.get("Sector2"));
-				pstmt.setString(5, params.get("Conocimientos"));
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					System.out.println("Damos vuelta 1");
@@ -111,6 +106,11 @@ public class Main {
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
 				sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
 						+ "OR Sector2=? OR Conocimientos=?");
+				pstmt2.setString(1, params.get("Sueldo"));
+				pstmt2.setString(2, params.get("Trabajo"));
+				pstmt2.setString(3, params.get("Sector1"));
+				pstmt2.setString(4, params.get("Sector2"));
+				pstmt2.setString(5, params.get("Conocimientos"));
 				ResultSet rs2 = pstmt2.executeQuery();
 				while (rs2.next()) {
 					System.out.println("Damos vuelta 2");
@@ -250,7 +250,6 @@ public class Main {
 					System.out.println("REPETIDO: " + rs.getInt(1));
 					last_inserted_id = "-1";
 				} else {
-					System.out.println("INSERTAR");
 					sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
 					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
 						pstmt2.setString(1, params.get("Usuario"));
