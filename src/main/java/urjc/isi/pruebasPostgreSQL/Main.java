@@ -126,11 +126,12 @@ public class Main {
 				json.put("Lenguajes", rs.getString("Lenguajes"));
 				json.put("Conocimientos", rs.getString("Conocimientos"));
 				jsonArr.put(json);
-				System.out.println(jsonArr.toString());
+				
 			}
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
 		}
+		System.out.println(jsonArr.toString());
 		return success;
     }
     
@@ -216,10 +217,11 @@ public class Main {
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
 					}
+					System.out.println("COJO ULTIMO ID");
 					sql = "SELECT id FROM users WHERE Usuario=?";
 					try (PreparedStatement pstmt3 = connection.prepareStatement(sql)) {
 						pstmt3.setString(1, params.get("Usuario"));
-						ResultSet rs3 = pstmt.executeQuery();
+						ResultSet rs3 = pstmt3.executeQuery();
 						if (rs3.next()) {
 							last_inserted_id = String.valueOf(rs3.getInt(1));
 						}
