@@ -76,6 +76,7 @@ public class Main {
 				&& "".equals(conocimientos)) {
 			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
 					+ "OR Sector2=? OR Conocimientos=?");
+			
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 				pstmt.setString(1, params.get("Sueldo"));
 				pstmt.setString(2, params.get("Trabajo"));
@@ -109,25 +110,25 @@ public class Main {
 			}
 		}
 		
-		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
+		try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
+			ResultSet rs2 = pstmt2.executeQuery();
+			while (rs2.next()) {
 				System.out.println("Damos vuelta");
 				json = new JSONObject();
-				json.put("Nombre", rs.getString("Nombre"));
-				json.put("Apellidos", rs.getString("Apellidos"));
-				json.put("Email", rs.getString("Email"));
-				json.put("Telefono", rs.getString("Telefono"));
-				json.put("Trabajo", rs.getString("Trabajo"));
-				json.put("Empresa", rs.getString("Empresa"));
-				json.put("Sueldo", rs.getString("Sueldo"));
-				json.put("Universidad", rs.getString("Universidad"));
-				json.put("Carrera", rs.getString("Carrera"));
-				json.put("Sector1", rs.getString("Sector1"));
-				json.put("Sector2", rs.getString("Sector2"));
-				json.put("Experiencia", rs.getString("Experiencia"));
-				json.put("Lenguajes", rs.getString("Lenguajes"));
-				json.put("Conocimientos", rs.getString("Conocimientos"));
+				json.put("Nombre", rs2.getString("Nombre"));
+				json.put("Apellidos", rs2.getString("Apellidos"));
+				json.put("Email", rs2.getString("Email"));
+				json.put("Telefono", rs2.getString("Telefono"));
+				json.put("Trabajo", rs2.getString("Trabajo"));
+				json.put("Empresa", rs2.getString("Empresa"));
+				json.put("Sueldo", rs2.getString("Sueldo"));
+				json.put("Universidad", rs2.getString("Universidad"));
+				json.put("Carrera", rs2.getString("Carrera"));
+				json.put("Sector1", rs2.getString("Sector1"));
+				json.put("Sector2", rs2.getString("Sector2"));
+				json.put("Experiencia", rs2.getString("Experiencia"));
+				json.put("Lenguajes", rs2.getString("Lenguajes"));
+				json.put("Conocimientos", rs2.getString("Conocimientos"));
 				jsonArr.put(json);	
 			}
 			success = "1";
@@ -218,7 +219,6 @@ public class Main {
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT count(*) FROM users WHERE Usuario=?");
-		System.out.println("Datos: " + params.get("Usuario") + "|");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
@@ -241,7 +241,6 @@ public class Main {
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
-		System.out.println("Datos: " + params.get("Usuario") + "|"  + params.get("Sueldo"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
