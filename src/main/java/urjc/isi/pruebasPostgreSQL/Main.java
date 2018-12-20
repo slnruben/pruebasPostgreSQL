@@ -54,9 +54,8 @@ public class Main {
     
     // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
-    public static String doSelect(Request request, Response response) throws JSONException, SQLException {
+    public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException {
     	String sql = ("SELECT * FROM users");
-    	String success = "0";
     	String sueldo;
     	String trabajo;
     	String sector1;
@@ -97,10 +96,8 @@ public class Main {
 					json.put("Conocimientos", rs.getString("Conocimientos"));
 					jsonArr.put(json);	
 				}
-				success = "1";
 			} catch (SQLException e) {
 				System.out.println("ERROR1: " + e.getMessage());
-				success = "-1";
 			}
 		} else {
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
@@ -131,15 +128,13 @@ public class Main {
 					json.put("Conocimientos", rs2.getString("Conocimientos"));
 					jsonArr.put(json);	
 				}
-				success = "1";
 			} catch (SQLException e) {
 				System.out.println("ERROR2: " + e.getMessage());
-				success = "-1";
 			}
 		}
 
 		System.out.println(jsonArr.toString());
-		return success;
+		return jsonArr;
     }
     
  // Used to illustrate how to route requests to methods instead of
