@@ -61,8 +61,46 @@ public class Main {
 		
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT * FROM users WHERE Usuario=?");
-		System.out.println("Datos: " + params.get("Usuario") + "|");
+		String sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
+				+ "OR Sector2=? OR Conocimientos=?");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Usuario"));
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				json = new JSONObject();
+				json.put("Nombre", rs.getString("Nombre"));
+				json.put("Apellidos", rs.getString("Apellidos"));
+				json.put("Email", rs.getString("Email"));
+				json.put("Telefono", rs.getString("Telefono"));
+				json.put("Trabajo", rs.getString("Trabajo"));
+				json.put("Empresa", rs.getString("Empresa"));
+				json.put("Sueldo", rs.getString("Sueldo"));
+				json.put("Universidad", rs.getString("Universidad"));
+				json.put("Carrera", rs.getString("Carrera"));
+				json.put("Sector1", rs.getString("Sector1"));
+				json.put("Sector2", rs.getString("Sector2"));
+				json.put("Experiencia", rs.getString("Experiencia"));
+				json.put("Lenguajes", rs.getString("Lenguajes"));
+				json.put("Conocimientos", rs.getString("Conocimientos"));
+				jsonArr.put(json);
+				System.out.println(jsonArr.toString());
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		return success;
+    }
+    
+ // Used to illustrate how to route requests to methods instead of
+    // using lambda expressions
+    public static String doSelectAll(Request request, Response response) throws JSONException, SQLException {
+    	String success = "0";
+		JSONArray jsonArr = new JSONArray();
+		JSONObject json;
+		
+		connection.setAutoCommit(true);
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT * FROM users");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
@@ -268,6 +306,8 @@ public class Main {
 	get("/create_bbdd", Main::doCreateBBDD);
 	
 	get("/search_contacts", Main::doSelect);
+	
+	get("/get_contacts",  Main::doSelectAll);
 	
 	get("/register", Main::doRegister);
 	
