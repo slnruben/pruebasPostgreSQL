@@ -109,6 +109,8 @@ public class Main {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
+				json.put("id", rs.getString("id"));
+				json.put("Usuario", rs.getString("Usuario"));
 				json.put("Nombre", rs.getString("Nombre"));
 				json.put("Apellidos", rs.getString("Apellidos"));
 				json.put("Email", rs.getString("Email"));
@@ -210,11 +212,11 @@ public class Main {
 					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
 						pstmt2.setString(1, params.get("Usuario"));
 						pstmt2.setString(2, params.get("Sueldo").toString());
-						pstmt2.executeUpdate();
-						sql = "SELECT id FROM users WHERE Usuario=?";		
+						pstmt2.executeUpdate();			
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
 					}
+					sql = "SELECT id FROM users WHERE Usuario=?";
 					try (PreparedStatement pstmt3 = connection.prepareStatement(sql)) {
 						pstmt3.setString(1, params.get("Usuario"));
 						ResultSet rs3 = pstmt.executeQuery();
