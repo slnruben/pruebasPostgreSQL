@@ -80,6 +80,7 @@ public class Main {
 				while (rs.next()) {
 					System.out.println("Damos vuelta 1");
 					json = new JSONObject();
+					json.put("Id", rs.getString("id"));
 					json.put("Nombre", rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
@@ -112,6 +113,7 @@ public class Main {
 				while (rs2.next()) {
 					System.out.println("Damos vuelta 2");
 					json = new JSONObject();
+					json.put("Id", rs2.getString("id"));
 					json.put("Nombre", rs2.getString("Nombre"));
 					json.put("Apellidos", rs2.getString("Apellidos"));
 					json.put("Email", rs2.getString("Email"));
