@@ -107,36 +107,37 @@ public class Main {
 				System.out.println("ERROR1: " + e.getMessage());
 				success = "-1";
 			}
-		}
-		
-		try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
-			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
-					+ "OR Sector2=? OR Conocimientos=?");
-			ResultSet rs2 = pstmt2.executeQuery();
-			while (rs2.next()) {
-				System.out.println("Damos vuelta 2");
-				json = new JSONObject();
-				json.put("Nombre", rs2.getString("Nombre"));
-				json.put("Apellidos", rs2.getString("Apellidos"));
-				json.put("Email", rs2.getString("Email"));
-				json.put("Telefono", rs2.getString("Telefono"));
-				json.put("Trabajo", rs2.getString("Trabajo"));
-				json.put("Empresa", rs2.getString("Empresa"));
-				json.put("Sueldo", rs2.getString("Sueldo"));
-				json.put("Universidad", rs2.getString("Universidad"));
-				json.put("Carrera", rs2.getString("Carrera"));
-				json.put("Sector1", rs2.getString("Sector1"));
-				json.put("Sector2", rs2.getString("Sector2"));
-				json.put("Experiencia", rs2.getString("Experiencia"));
-				json.put("Lenguajes", rs2.getString("Lenguajes"));
-				json.put("Conocimientos", rs2.getString("Conocimientos"));
-				jsonArr.put(json);	
+		} else {
+			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
+				sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
+						+ "OR Sector2=? OR Conocimientos=?");
+				ResultSet rs2 = pstmt2.executeQuery();
+				while (rs2.next()) {
+					System.out.println("Damos vuelta 2");
+					json = new JSONObject();
+					json.put("Nombre", rs2.getString("Nombre"));
+					json.put("Apellidos", rs2.getString("Apellidos"));
+					json.put("Email", rs2.getString("Email"));
+					json.put("Telefono", rs2.getString("Telefono"));
+					json.put("Trabajo", rs2.getString("Trabajo"));
+					json.put("Empresa", rs2.getString("Empresa"));
+					json.put("Sueldo", rs2.getString("Sueldo"));
+					json.put("Universidad", rs2.getString("Universidad"));
+					json.put("Carrera", rs2.getString("Carrera"));
+					json.put("Sector1", rs2.getString("Sector1"));
+					json.put("Sector2", rs2.getString("Sector2"));
+					json.put("Experiencia", rs2.getString("Experiencia"));
+					json.put("Lenguajes", rs2.getString("Lenguajes"));
+					json.put("Conocimientos", rs2.getString("Conocimientos"));
+					jsonArr.put(json);	
+				}
+				success = "1";
+			} catch (SQLException e) {
+				System.out.println("ERROR2: " + e.getMessage());
+				success = "-1";
 			}
-			success = "1";
-		} catch (SQLException e) {
-			System.out.println("ERROR2: " + e.getMessage());
-			success = "-1";
 		}
+
 		System.out.println(jsonArr.toString());
 		return success;
     }
