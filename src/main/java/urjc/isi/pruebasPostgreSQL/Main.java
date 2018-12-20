@@ -65,10 +65,10 @@ public class Main {
 				+ "OR Sector2=? OR Conocimientos=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Sueldo"));
-			pstmt.setString(1, params.get("Trabajo"));
-			pstmt.setString(1, params.get("Sector1"));
-			pstmt.setString(1, params.get("Sector2"));
-			pstmt.setString(1, params.get("Conocimientos"));
+			pstmt.setString(2, params.get("Trabajo"));
+			pstmt.setString(3, params.get("Sector1"));
+			pstmt.setString(4, params.get("Sector2"));
+			pstmt.setString(5, params.get("Conocimientos"));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
@@ -106,7 +106,6 @@ public class Main {
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM users");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, params.get("Usuario"));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
