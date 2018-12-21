@@ -139,7 +139,7 @@ public class Main {
 		return jsonArr;
     }
     
- // Used to illustrate how to route requests to methods instead of
+    // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
     public static String doSelectAll(Request request, Response response) throws JSONException, SQLException {
     	String success = "0";
@@ -189,6 +189,7 @@ public class Main {
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
 		System.out.println(params.get("Apellidos"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			System.out.println("NOMBRE: " + params.get("Nombre"));
 			pstmt.setString(1, params.get("Nombre"));
 			pstmt.setString(2, params.get("Apellidos"));
 			pstmt.setString(3, params.get("Email"));
