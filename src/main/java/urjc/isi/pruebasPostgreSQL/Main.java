@@ -71,14 +71,13 @@ public class Main {
 		sector1 = params.get("Sector1");
 		sector2 = params.get("Sector2");
 		conocimientos = params.get("Conocimientos");
-		System.out.println(sueldo + "|" + trabajo + "|" + sector1 + "|" + sector2 + "|" + conocimientos);
+		
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
 			
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					System.out.println("Damos vuelta 1");
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
 					json.put("Nombre", rs.getString("Nombre"));
@@ -111,7 +110,6 @@ public class Main {
 				pstmt2.setString(5, params.get("Conocimientos"));
 				ResultSet rs2 = pstmt2.executeQuery();
 				while (rs2.next()) {
-					System.out.println("Damos vuelta 2");
 					json = new JSONObject();
 					json.put("Id", rs2.getString("id"));
 					json.put("Nombre", rs2.getString("Nombre"));
@@ -134,8 +132,6 @@ public class Main {
 				System.out.println("ERROR2: " + e.getMessage());
 			}
 		}
-
-		System.out.println(jsonArr.toString());
 		return jsonArr;
     }
     
@@ -187,9 +183,8 @@ public class Main {
 		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
-		System.out.println(params.get("Apellidos"));
+		System.out.println(params.get("Nombre"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			System.out.println("NOMBRE: " + params.get("Nombre"));
 			pstmt.setString(1, params.get("Nombre"));
 			pstmt.setString(2, params.get("Apellidos"));
 			pstmt.setString(3, params.get("Email"));
@@ -285,6 +280,19 @@ public class Main {
 					+ "Empresa text, Sueldo text, Universidad text, Carrera text,"
 					+ "Sector1 text, Sector2 text, Experiencia text, Lenguajes text,"
 					+ "Conocimientos text)");
+			statement.executeUpdate("drop table if exists negotiations");
+			statement.executeUpdate("create table negotiations (id SERIAL PRIMARY KEY, "
+					+ "UsuarioCreador text, UsuarioReceptor text, Estado text, "
+					+ "NombreOfrecido text, ApellidosOfrecido text, EmailOfrecido text, "
+					+ "TelefonoOfrecido text, TrabajoOfrecido text, EmpresaOfrecido text, "
+					+ "UniversidadOfrecido text, CarreraOfrecido text, Sector1Ofrecido text, "
+					+ "Sector2Ofrecido text, ExperienciaOfrecido text, LenguajesOfrecido text, "
+					+ "ConocimientosOfrecido text, NombreRequerido text, "
+					+ "ApellidosRequerido text, EmailRequerido text, TelefonoRequerido text, "
+					+ "TrabajoRequerido text, EmpresaRequerido text, UniversidarRequerido text, "
+					+ "CarreraRequerido text, Sector1Requerido text, Sector2Requerido text, "
+					+ "ExperienciaRequerdido text, LenguajesRequerido text, "
+					+ "ConocimientosRequerido text)");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
