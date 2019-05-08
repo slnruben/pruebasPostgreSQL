@@ -190,19 +190,19 @@ public class Main {
 		System.out.println(params.get("Nombre"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, URLDecoder.decode(params.get("Nombre"), "UTF-8" ));
-			pstmt.setString(2, params.get("Apellidos"));
-			pstmt.setString(3, params.get("Email"));
+			pstmt.setString(2, URLDecoder.decode(params.get("Apellidos"), "UTF-8" ));
+			pstmt.setString(3, URLDecoder.decode(params.get("Email"), "UTF-8" ));
 			pstmt.setString(4, params.get("Telefono"));
-			pstmt.setString(5, params.get("Trabajo"));
-			pstmt.setString(6, params.get("Empresa"));
+			pstmt.setString(5, URLDecoder.decode(params.get("Trabajo"), "UTF-8" ));
+			pstmt.setString(6, URLDecoder.decode(params.get("Empresa"), "UTF-8" ));
 			pstmt.setString(7, params.get("Sueldo"));
-			pstmt.setString(8, params.get("Universidad"));
-			pstmt.setString(9, params.get("Carrera"));
-			pstmt.setString(10, params.get("Sector1"));
-			pstmt.setString(11, params.get("Sector2"));
-			pstmt.setString(12, params.get("Experiencia"));
-			pstmt.setString(13, params.get("Lenguajes"));
-			pstmt.setString(14, params.get("Conocimientos"));
+			pstmt.setString(8, URLDecoder.decode(params.get("Universidad"), "UTF-8" ));
+			pstmt.setString(9, URLDecoder.decode(params.get("Carrera"), "UTF-8" ));
+			pstmt.setString(10, URLDecoder.decode(params.get("Sector1"), "UTF-8" ));
+			pstmt.setString(11, URLDecoder.decode(params.get("Sector2"), "UTF-8" ));
+			pstmt.setString(12, URLDecoder.decode(params.get("Experiencia"), "UTF-8" ));
+			pstmt.setString(13, URLDecoder.decode(params.get("Lenguajes"), "UTF-8" ));
+			pstmt.setString(14, URLDecoder.decode(params.get("Conocimientos"), "UTF-8" ));
 			pstmt.setString(15, params.get("Usuario"));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
