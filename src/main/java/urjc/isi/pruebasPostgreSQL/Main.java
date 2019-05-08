@@ -106,7 +106,7 @@ public class Main {
 		} else {
 			sql = ("SELECT * FROM users WHERE");
 			if (!"".equals(sueldo)) {
-				sql = sql + " Sueldo=" + sueldo;
+				sql = sql + " Sueldo LIKE " + sueldo;
 				prev = true;
 			}
 			if (!"".equals(trabajo)) {
@@ -115,7 +115,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Trabajo=" + trabajo;
+				sql = sql + " Trabajo LIKE " + trabajo;
 			}
 			if (!"".equals(sector1)) {
 				if (prev) {
@@ -123,7 +123,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Sector1=" + sector1;
+				sql = sql + " Sector1 LIKE " + sector1;
 			}
 			if (!"".equals(sector2)) {
 				if (prev) {
@@ -131,7 +131,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Sector2=" + sector2;
+				sql = sql + " Sector2 LIKE " + sector2;
 			}
 			if (!"".equals(conocimientos)) {
 				if (prev) {
@@ -139,7 +139,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Conocimientos=" + conocimientos;
+				sql = sql + " Conocimientos LIKE " + conocimientos;
 			}
 			sql = sql + " AND Usuario NOT LIKE " + usuario;
 			System.out.println("SQL: " + sql);
