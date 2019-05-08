@@ -39,13 +39,16 @@ public class Main {
     private static HashMap<String, String> getRequestData(Request request) {
 		//System.out.println(request.body());
 		String[] aux1 = request.body().split("&");
+		System.out.println("000: " + aux1);
 		HashMap<String, String> params = new HashMap<>();
 		String[] aux2;
 		for (String item: aux1) {
 			aux2 = item.split("=");
 			if (aux2.length == 1) {
+				System.out.println("111: " + aux2[0]);
 				params.put(aux2[0], "");
 			} else {
+				System.out.println("111: " + aux2[0] + " | " + aux2[1]);
 				params.put(aux2[0], aux2[1]);
 			}
 		}
