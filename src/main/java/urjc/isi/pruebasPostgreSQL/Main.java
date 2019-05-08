@@ -123,7 +123,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Sector1 LIKE " + sector1;
+				sql = sql + " Sector1 LIKE '" + sector1 + "'";
 			}
 			if (!"".equals(sector2)) {
 				if (prev) {
@@ -131,7 +131,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Sector2 LIKE " + sector2;
+				sql = sql + " Sector2 LIKE '" + sector2 + "'";
 			}
 			if (!"".equals(conocimientos)) {
 				if (prev) {
@@ -139,9 +139,9 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Conocimientos LIKE " + conocimientos;
+				sql = sql + " Conocimientos LIKE '" + conocimientos + "'";
 			}
-			sql = sql + " AND Usuario NOT LIKE " + usuario;
+			sql = sql + " AND Usuario NOT LIKE '" + usuario + "'";
 			System.out.println("SQL: " + sql);
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
 				/**
