@@ -84,7 +84,7 @@ public class Main {
 				while (rs.next()) {
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
-					json.put("Nombre", URLDecoder.decode(rs.getString("Nombre"), "UTF-8" ));
+					json.put("Nombre",rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
 					json.put("Telefono", rs.getString("Telefono"));
@@ -179,7 +179,7 @@ public class Main {
 		return success;
     }
     
-    public static String doUpdateUser(Request request, Response response) throws SQLException {
+    public static String doUpdateUser(Request request, Response response) throws SQLException, UnsupportedEncodingException {
 		String success = "0";
 		
 		connection.setAutoCommit(true);
@@ -189,7 +189,7 @@ public class Main {
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
 		System.out.println(params.get("Nombre"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, params.get("Nombre"));
+			pstmt.setString(1, URLDecoder.decode(params.get("Nombre"), "UTF-8" ));
 			pstmt.setString(2, params.get("Apellidos"));
 			pstmt.setString(3, params.get("Email"));
 			pstmt.setString(4, params.get("Telefono"));
@@ -304,6 +304,21 @@ public class Main {
 		}
 		return "1";
 	}
+	
+	public static String doCreateNegotiation(Request request, Response response) {
+		String success = "0";
+		Statement statement;
+		
+		try {
+			connection.setAutoCommit(true);
+			HashMap<String, String> params = getRequestData(request);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return e.toString();
+		}
+		return success;
+	}
 
     public static String select(Connection conn, String table, String film) {
 	String sql = "SELECT * FROM " + table + " WHERE film=?";
@@ -377,6 +392,8 @@ public class Main {
 	post("/update_user", Main::doUpdateUser);
 	
 	post("/search_contacts", Main::doSelect);
+	
+	post("/create_negotiation", Main::doCreateNegotiation);
 
 	// In this case we use a Java 8 method reference to specify
 	// the method to be called when a GET /:table/:film HTTP request
