@@ -40,16 +40,13 @@ public class Main {
     private static HashMap<String, String> getRequestData(Request request) {
 		//System.out.println(request.body());
 		String[] aux1 = request.body().split("&");
-		System.out.println("000: " + aux1);
 		HashMap<String, String> params = new HashMap<>();
 		String[] aux2;
 		for (String item: aux1) {
 			aux2 = item.split("=");
 			if (aux2.length == 1) {
-				System.out.println("111: " + aux2[0]);
 				params.put(aux2[0], "");
 			} else {
-				System.out.println("111: " + aux2[0] + " | " + aux2[1]);
 				params.put(aux2[0], aux2[1]);
 			}
 		}
@@ -59,7 +56,8 @@ public class Main {
     // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
     public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
-    	String sql = ("SELECT * FROM users");
+    	String sql;
+    	String usuario;
     	String sueldo;
     	String trabajo;
     	String sector1;
@@ -78,12 +76,14 @@ public class Main {
 		
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
-			
+			sql = ("SELECT * FROM users WHERE Usuario LIKE ?");
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+				pstmt.setString(1, params.get("Usuario"));
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
+					System.out.println( rs.getString("id"));
 					json.put("Nombre",rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
@@ -104,9 +104,9 @@ public class Main {
 				System.out.println("ERROR1: " + e.getMessage());
 			}
 		} else {
-			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
-				sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
-						+ "OR Sector2=? OR Conocimientos=?");
+			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
+					+ "OR Sector2=? OR Conocimientos=?");
+			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
 				pstmt2.setString(1, params.get("Sueldo"));
 				pstmt2.setString(2, params.get("Trabajo"));
 				pstmt2.setString(3, params.get("Sector1"));
@@ -187,7 +187,6 @@ public class Main {
 		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
 						+ "Experiencia=?, Lenguajes=?, Conocimientos=? WHERE Usuario=?";
-		System.out.println(params.get("Nombre"));
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, URLDecoder.decode(params.get("Nombre"), "UTF-8" ));
 			pstmt.setString(2, URLDecoder.decode(params.get("Apellidos"), "UTF-8" ));
