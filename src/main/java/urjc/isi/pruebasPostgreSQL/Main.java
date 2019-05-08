@@ -75,7 +75,6 @@ public class Main {
 		sector1 = params.get("Sector1");
 		sector2 = params.get("Sector2");
 		conocimientos = params.get("Conocimientos");
-		System.out.println("USUARIO: " + usuario);
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
 			sql = ("SELECT * FROM users WHERE Usuario NOT LIKE ?");
@@ -143,7 +142,7 @@ public class Main {
 				}
 				sql = sql + " Conocimientos=" + conocimientos;
 			}
-			sql = sql + " AND Usuario !~* " + usuario;
+			sql = sql + " AND Usuario NOT LIKE " + usuario;
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
 				/**
 				pstmt2.setString(1, params.get("Sueldo"));
