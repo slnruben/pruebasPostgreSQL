@@ -65,6 +65,7 @@ public class Main {
     	String conocimientos;
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
+		Boolean prev = false;
 		
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
@@ -74,7 +75,7 @@ public class Main {
 		sector1 = params.get("Sector1");
 		sector2 = params.get("Sector2");
 		conocimientos = params.get("Conocimientos");
-		
+		System.out.println("USUARIO: " + usuario);
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
 			sql = ("SELECT * FROM users WHERE Usuario NOT LIKE ?");
@@ -108,17 +109,38 @@ public class Main {
 			sql = ("SELECT * FROM users WHERE");
 			if (!"".equals(sueldo)) {
 				sql = sql + " Sueldo=" + sueldo;
+				prev = true;
 			}
 			if (!"".equals(trabajo)) {
+				if (prev) {
+					sql = sql + " OR ";
+				} else {
+					prev = true;
+				}
 				sql = sql + " Trabajo=" + trabajo;
 			}
 			if (!"".equals(sector1)) {
+				if (prev) {
+					sql = sql + " OR ";
+				} else {
+					prev = true;
+				}
 				sql = sql + " Sector1=" + sector1;
 			}
 			if (!"".equals(sector2)) {
+				if (prev) {
+					sql = sql + " OR ";
+				} else {
+					prev = true;
+				}
 				sql = sql + " Sector2=" + sector2;
 			}
 			if (!"".equals(conocimientos)) {
+				if (prev) {
+					sql = sql + " OR ";
+				} else {
+					prev = true;
+				}
 				sql = sql + " Conocimientos=" + conocimientos;
 			}
 			sql = sql + " AND Usuario !~* " + usuario;
