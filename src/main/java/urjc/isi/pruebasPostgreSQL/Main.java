@@ -22,8 +22,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLDecoder;
 import java.net.URI;
 
 
@@ -57,7 +58,7 @@ public class Main {
     
     // Used to illustrate how to route requests to methods instead of
     // using lambda expressions
-    public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException {
+    public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
     	String sql = ("SELECT * FROM users");
     	String sueldo;
     	String trabajo;
@@ -83,7 +84,7 @@ public class Main {
 				while (rs.next()) {
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
-					json.put("Nombre", rs.getString("Nombre"));
+					json.put("Nombre", URLDecoder.decode(rs.getString("Nombre"), "UTF-8" ));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
 					json.put("Telefono", rs.getString("Telefono"));
