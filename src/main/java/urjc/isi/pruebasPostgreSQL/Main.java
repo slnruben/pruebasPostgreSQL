@@ -84,7 +84,6 @@ public class Main {
 				while (rs.next()) {
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
-					System.out.println( rs.getString("id"));
 					json.put("Nombre",rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
@@ -143,6 +142,7 @@ public class Main {
 				sql = sql + " Conocimientos=" + conocimientos;
 			}
 			sql = sql + " AND Usuario NOT LIKE " + usuario;
+			System.out.println("SQL: " + sql);
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
 				/**
 				pstmt2.setString(1, params.get("Sueldo"));
