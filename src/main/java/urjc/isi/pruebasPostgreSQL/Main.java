@@ -68,6 +68,7 @@ public class Main {
 		
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
+		usuario = params.get("Usuario");
 		sueldo = params.get("Sueldo");
 		trabajo = params.get("Trabajo");
 		sector1 = params.get("Sector1");
@@ -76,9 +77,9 @@ public class Main {
 		
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
-			sql = ("SELECT * FROM users WHERE Usuario LIKE ?");
+			sql = ("SELECT * FROM users WHERE Usuario NOT LIKE ?");
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-				pstmt.setString(1, params.get("Usuario"));
+				pstmt.setString(1, usuario);
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					json = new JSONObject();
@@ -104,14 +105,30 @@ public class Main {
 				System.out.println("ERROR1: " + e.getMessage());
 			}
 		} else {
-			sql = ("SELECT * FROM users WHERE Sueldo=? OR Trabajo=? OR Sector1=? "
-					+ "OR Sector2=? OR Conocimientos=?");
+			sql = ("SELECT * FROM users WHERE");
+			if (!"".equals(sueldo)) {
+				sql = sql + " Sueldo=" + sueldo;
+			}
+			if (!"".equals(trabajo)) {
+				sql = sql + " Trabajo=" + trabajo;
+			}
+			if (!"".equals(sector1)) {
+				sql = sql + " Sector1=" + sector1;
+			}
+			if (!"".equals(sector2)) {
+				sql = sql + " Sector2=" + sector2;
+			}
+			if (!"".equals(conocimientos)) {
+				sql = sql + " Conocimientos=" + conocimientos;
+			}
+			sql = sql + " AND Usuario !~* " + usuario;
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
+				/**
 				pstmt2.setString(1, params.get("Sueldo"));
 				pstmt2.setString(2, params.get("Trabajo"));
 				pstmt2.setString(3, params.get("Sector1"));
 				pstmt2.setString(4, params.get("Sector2"));
-				pstmt2.setString(5, params.get("Conocimientos"));
+				pstmt2.setString(5, params.get("Conocimientos"));*/
 				ResultSet rs2 = pstmt2.executeQuery();
 				while (rs2.next()) {
 					json = new JSONObject();
