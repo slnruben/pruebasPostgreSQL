@@ -106,7 +106,7 @@ public class Main {
 		} else {
 			sql = ("SELECT * FROM users WHERE");
 			if (!"".equals(sueldo)) {
-				sql = sql + " Sueldo LIKE " + sueldo;
+				sql = sql + " Sueldo LIKE '" + sueldo + "'";
 				prev = true;
 			}
 			if (!"".equals(trabajo)) {
@@ -115,7 +115,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Trabajo LIKE " + trabajo;
+				sql = sql + " Trabajo LIKE '" + trabajo + "'";
 			}
 			if (!"".equals(sector1)) {
 				if (prev) {
