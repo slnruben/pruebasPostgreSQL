@@ -115,7 +115,7 @@ public class Main {
 				} else {
 					prev = true;
 				}
-				sql = sql + " Trabajo LIKE '" + trabajo + "'";
+				sql = sql + " Trabajo ~* '" + trabajo + "'";
 			}
 			if (!"".equals(sector1)) {
 				if (prev) {
