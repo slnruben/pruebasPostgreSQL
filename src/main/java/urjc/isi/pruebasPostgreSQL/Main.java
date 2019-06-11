@@ -84,6 +84,7 @@ public class Main {
 				while (rs.next()) {
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
+					json.put("Usuario",rs.getString("Usuario"));
 					json.put("Nombre",rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
