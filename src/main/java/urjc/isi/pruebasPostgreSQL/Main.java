@@ -82,9 +82,10 @@ public class Main {
 				pstmt.setString(1, usuario);
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
+					System.out.println("USUARIO: " + rs.getString("Usuario"));
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
-					json.put("Usuario",rs.getString("Usuario"));
+					json.put("Usuario", rs.getString("Usuario"));
 					json.put("Nombre",rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
 					json.put("Email", rs.getString("Email"));
@@ -145,16 +146,12 @@ public class Main {
 			sql = sql + " AND Usuario NOT LIKE '" + usuario + "'";
 			System.out.println("SQL: " + sql);
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
-				/**
-				pstmt2.setString(1, params.get("Sueldo"));
-				pstmt2.setString(2, params.get("Trabajo"));
-				pstmt2.setString(3, params.get("Sector1"));
-				pstmt2.setString(4, params.get("Sector2"));
-				pstmt2.setString(5, params.get("Conocimientos"));*/
 				ResultSet rs2 = pstmt2.executeQuery();
 				while (rs2.next()) {
+					System.out.println("USUARIO: " + rs2.getString("Usuario"));
 					json = new JSONObject();
 					json.put("Id", rs2.getString("id"));
+					json.put("Usuario", rs2.getString("Usuario"));
 					json.put("Nombre", rs2.getString("Nombre"));
 					json.put("Apellidos", rs2.getString("Apellidos"));
 					json.put("Email", rs2.getString("Email"));
