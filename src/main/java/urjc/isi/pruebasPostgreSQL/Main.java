@@ -451,7 +451,7 @@ public class Main {
 			success = "1";
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println("doCreateNegotiation: " + e.getMessage());
+			System.out.println("Error doCreateNegotiation: " + e.getMessage());
 			return "-1";
 		}
 		return success;
