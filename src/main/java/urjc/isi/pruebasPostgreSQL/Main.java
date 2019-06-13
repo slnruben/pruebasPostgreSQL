@@ -445,7 +445,7 @@ public class Main {
 			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
 			pstmt.executeUpdate();	
 			success = "1";
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("doCreateNegotiation: " + e.getMessage());
 			return "-1";
