@@ -68,17 +68,17 @@ public class Main {
 		Boolean prev = false;
 		
 		HashMap<String, String> params = getRequestData(request);
-		usuario = params.get("Usuario");
-		sueldo = params.get("Sueldo");
-		trabajo = params.get("Trabajo");
-		sector1 = params.get("Sector1");
-		sector2 = params.get("Sector2");
+		usuario = URLDecoder.decode(params.get("Usuario"), "UTF-8" );
+		sueldo = URLDecoder.decode(params.get("Sueldo"), "UTF-8" );
+		trabajo = URLDecoder.decode(params.get("Trabajo"), "UTF-8" );
+		sector1 = URLDecoder.decode(params.get("Sector1"), "UTF-8" );
+		sector2 = URLDecoder.decode(params.get("Sector2"), "UTF-8" );
 		conocimientos = params.get("Conocimientos");
 		if ("".equals(sueldo) && "".equals(trabajo) && "".equals(sector1) && "".equals(sector2)
 				&& "".equals(conocimientos)) {
 			sql = ("SELECT * FROM users WHERE Usuario NOT LIKE ?");
 			try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-				pstmt.setString(1, usuario);
+				pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
 					json = new JSONObject();
@@ -142,7 +142,6 @@ public class Main {
 				sql = sql + " Conocimientos ~* '" + conocimientos + "'";
 			}
 			sql = sql + " AND Usuario NOT LIKE '" + usuario + "'";
-			System.out.println("SQL: " + sql);
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
 				ResultSet rs2 = pstmt2.executeQuery();
 				while (rs2.next()) {
@@ -212,7 +211,7 @@ public class Main {
 		return success;
     }
     
-    public static String doSelectAllNegotiations(Request request, Response response) throws JSONException, SQLException {
+    public static JSONArray doSelectAllNegotiations(Request request, Response response) throws JSONException, SQLException {
     	String success = "0";
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
@@ -264,7 +263,7 @@ public class Main {
 			System.out.println("ERROR: " + e.getMessage());
 		}
 		System.out.println(jsonArr.toString());
-		return success;
+		return jsonArr;
     }
     
     public static String doUpdateUser(Request request, Response response) throws SQLException, UnsupportedEncodingException {
@@ -277,11 +276,11 @@ public class Main {
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, URLDecoder.decode(params.get("Nombre"), "UTF-8" ));
 			pstmt.setString(2, URLDecoder.decode(params.get("Apellidos"), "UTF-8" ));
-			pstmt.setString(3, URLDecoder.decode(params.get("Email"), "UTF-8" ));
-			pstmt.setString(4, params.get("Telefono"));
+			pstmt.setString(3, URLDecoder.decode(params.get("Email"), "UTF-8" ));	
+			pstmt.setString(4, URLDecoder.decode(params.get("Telefono"), "UTF-8" ));
 			pstmt.setString(5, URLDecoder.decode(params.get("Trabajo"), "UTF-8" ));
-			pstmt.setString(6, URLDecoder.decode(params.get("Empresa"), "UTF-8" ));
-			pstmt.setString(7, params.get("Sueldo"));
+			pstmt.setString(6, URLDecoder.decode(params.get("Empresa"), "UTF-8" ));	
+			pstmt.setString(7, URLDecoder.decode(params.get("Sueldo"), "UTF-8" ));
 			pstmt.setString(8, URLDecoder.decode(params.get("Universidad"), "UTF-8" ));
 			pstmt.setString(9, URLDecoder.decode(params.get("Carrera"), "UTF-8" ));
 			pstmt.setString(10, URLDecoder.decode(params.get("Sector1"), "UTF-8" ));
@@ -289,7 +288,7 @@ public class Main {
 			pstmt.setString(12, URLDecoder.decode(params.get("Experiencia"), "UTF-8" ));
 			pstmt.setString(13, URLDecoder.decode(params.get("Lenguajes"), "UTF-8" ));
 			pstmt.setString(14, URLDecoder.decode(params.get("Conocimientos"), "UTF-8" ));
-			pstmt.setString(15, params.get("Usuario"));
+			pstmt.setString(15, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
@@ -318,7 +317,7 @@ public class Main {
 		return success;
     }
     
-	public static String doRegister(Request request, Response response) throws SQLException {
+	public static String doRegister(Request request, Response response) throws SQLException, UnsupportedEncodingException {
 		String last_inserted_id = "-1";
 		
 		HashMap<String, String> params = getRequestData(request);
@@ -333,15 +332,15 @@ public class Main {
 				} else {
 					sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
 					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
-						pstmt2.setString(1, params.get("Usuario"));
-						pstmt2.setString(2, params.get("Sueldo").toString());
+						pstmt2.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
+						pstmt2.setString(2, URLDecoder.decode(params.get("Sueldo"), "UTF-8" ));
 						pstmt2.executeUpdate();			
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
 					}
 					sql = "SELECT id FROM users WHERE Usuario=?";
 					try (PreparedStatement pstmt3 = connection.prepareStatement(sql)) {
-						pstmt3.setString(1, params.get("Usuario"));
+						pstmt3.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
 						ResultSet rs3 = pstmt3.executeQuery();
 						if (rs3.next()) {
 							last_inserted_id = String.valueOf(rs3.getInt(1));
