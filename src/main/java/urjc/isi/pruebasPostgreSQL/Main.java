@@ -183,7 +183,7 @@ public class Main {
 		JSONObject json;
 		
 		connection.setAutoCommit(true);
-		HashMap<String, String> params = getRequestData(request);
+		//HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM users");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			ResultSet rs = pstmt.executeQuery();
@@ -221,7 +221,7 @@ public class Main {
 		JSONObject json;
 		
 		connection.setAutoCommit(true);
-		HashMap<String, String> params = getRequestData(request);
+		//HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM negotiations");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			ResultSet rs = pstmt.executeQuery();
@@ -404,7 +404,6 @@ public class Main {
 	public static String doCreateNegotiation(Request request, Response response) throws SQLException, UnsupportedEncodingException {
 		String sql;
 		String success = "0";
-		Statement statement;
 		
 		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
@@ -520,6 +519,8 @@ public class Main {
 	get("/search_contacts", Main::doSelect);
 	
 	get("/get_contacts",  Main::doSelectAll);
+	
+	get("/get_negotiations", Main::doSelectAllNegotiations);
 	
 	get("/register", Main::doRegister);
 	
