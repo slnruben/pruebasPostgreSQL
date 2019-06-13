@@ -398,12 +398,11 @@ public class Main {
 		String success = "0";
 		
 		HashMap<String, String> params = getRequestData(request);
-		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
+		/*sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Trabajo, Ofrecido_Sueldo, Requerido_Nombre, "
 				+ "Requerido_Sueldo) "
-				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";*/
 		
-		/**
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
 				+ "Ofrecido_Trabajo, Ofrecido_Empresa, Ofrecido_Sueldo, Ofrecido_Universidad, "
@@ -414,15 +413,15 @@ public class Main {
 				+ "Requerido_Carrera, Requerido_Sector1, Requerido_Sector2, "
 				+ "Requerido_Experiencia, Requerido_Lenguajes, Requerido_Conocimientos) "
 				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
-				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";*/
+				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario_Creador"));
 			pstmt.setString(2, params.get("Usuario_Receptor"));
 			pstmt.setString(3, params.get("Estado"));
 			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
 			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Apellidos"), "UTF-8" ));
-			pstmt.setString(6, URLDecoder.decode(params.get("Ofrecido_Email"), "UTF-8" ));
-			pstmt.setString(7, params.get("Ofrecido_Telefono"));
+			pstmt.setString(6, URLDecoder.decode(params.get("Ofrecido_Email"), "UTF-8" ));	
+			pstmt.setString(7, URLDecoder.decode(params.get("Ofrecido_Telefono"), "UTF-8" ));
 			pstmt.setString(8, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
 			pstmt.setString(9, URLDecoder.decode(params.get("Ofrecido_Empresa"), "UTF-8" ));
 			pstmt.setString(10, URLDecoder.decode(params.get("Ofrecido_Sueldo"), "UTF-8" ));
