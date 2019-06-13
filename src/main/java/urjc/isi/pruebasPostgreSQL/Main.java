@@ -215,6 +215,62 @@ public class Main {
 		return success;
     }
     
+    public static String doSelectAllNegotiations(Request request, Response response) throws JSONException, SQLException {
+    	String success = "0";
+		JSONArray jsonArr = new JSONArray();
+		JSONObject json;
+		
+		connection.setAutoCommit(true);
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT * FROM negotiations");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				json = new JSONObject();
+				json = new JSONObject();
+				json.put("Id", rs.getString("id"));
+				json.put("Usuario_Creador", rs.getString("Usuario_Creador"));
+				json.put("Usuario_Receptor",rs.getString("Usuario_Receptor"));
+				json.put("Estado", rs.getString("Estado"));
+				json.put("Ofrecido_Nombre", rs.getString("Ofrecido_Nombre"));
+				json.put("Ofrecido_Apellidos", rs.getString("Ofrecido_Apellidos"));
+				json.put("Ofrecido_Email", rs.getString("Ofrecido_Email"));
+				json.put("Ofrecido_Telefono", rs.getString("Ofrecido_Telefono"));
+				json.put("Ofrecido_Trabajo", rs.getString("Ofrecido_Trabajo"));
+				json.put("Ofrecido_Empresa", rs.getString("Ofrecido_Empresa"));
+				json.put("Ofrecido_Sueldo", rs.getString("Ofrecido_Sueldo"));
+				json.put("Ofrecido_Universidad", rs.getString("Ofrecido_Universidad"));
+				json.put("Ofrecido_Carrera", rs.getString("Ofrecido_Carrera"));
+				json.put("Ofrecido_Sector1", rs.getString("Ofrecido_Sector1"));
+				json.put("Ofrecido_Sector2", rs.getString("Ofrecido_Sector2"));
+				json.put("Ofrecido_Experiencia", rs.getString("Ofrecido_Experiencia"));
+				json.put("Ofrecido_Lenguajes", rs.getString("Ofrecido_Lenguajes"));
+				json.put("Ofrecido_Conocimientos", rs.getString("Ofrecido_Conocimientos"));
+				
+				json.put("Requerido_Nombre", rs.getString("Requerido_Nombre"));
+				json.put("Requerido_Apellidos", rs.getString("Requerido_Apellidos"));
+				json.put("Requerido_Email", rs.getString("Requerido_Email"));
+				json.put("Requerido_Telefono", rs.getString("Requerido_Telefono"));
+				json.put("Requerido_Trabajo", rs.getString("Requerido_Trabajo"));
+				json.put("Requerido_Empresa", rs.getString("Requerido_Empresa"));
+				json.put("Requerido_Sueldo", rs.getString("Requerido_Sueldo"));
+				json.put("Requerido_Universidad", rs.getString("Requerido_Universidad"));
+				json.put("Requerido_Carrera", rs.getString("Requerido_Carrera"));
+				json.put("Requerido_Sector1", rs.getString("Requerido_Sector1"));
+				json.put("Requerido_Sector2", rs.getString("Requerido_Sector2"));
+				json.put("Requerido_Experiencia", rs.getString("Requerido_Experiencia"));
+				json.put("Requerido_Lenguajes", rs.getString("Requerido_Lenguajes"));
+				json.put("Requerido_Conocimientos", rs.getString("Requerido_Conocimientos"));
+				jsonArr.put(json);
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		System.out.println(jsonArr.toString());
+		return success;
+    }
+    
     public static String doUpdateUser(Request request, Response response) throws SQLException, UnsupportedEncodingException {
 		String success = "0";
 		
@@ -321,17 +377,22 @@ public class Main {
 					+ "Conocimientos text)");
 			statement.executeUpdate("drop table if exists negotiations");
 			statement.executeUpdate("create table negotiations (id SERIAL PRIMARY KEY, "
-					+ "UsuarioCreador text, UsuarioReceptor text, Estado text, "
-					+ "NombreOfrecido text, ApellidosOfrecido text, EmailOfrecido text, "
-					+ "TelefonoOfrecido text, TrabajoOfrecido text, EmpresaOfrecido text, "
-					+ "UniversidadOfrecido text, CarreraOfrecido text, Sector1Ofrecido text, "
-					+ "Sector2Ofrecido text, ExperienciaOfrecido text, LenguajesOfrecido text, "
-					+ "ConocimientosOfrecido text, NombreRequerido text, "
-					+ "ApellidosRequerido text, EmailRequerido text, TelefonoRequerido text, "
-					+ "TrabajoRequerido text, EmpresaRequerido text, UniversidarRequerido text, "
-					+ "CarreraRequerido text, Sector1Requerido text, Sector2Requerido text, "
-					+ "ExperienciaRequerdido text, LenguajesRequerido text, "
-					+ "ConocimientosRequerido text)");
+					+ "Usuario_Creador text, Usuario_Receptor text, "
+					+ "Estado text, Ofrecido_Nombre text, "
+					+ "Ofrecido_Apellidos text, Ofrecido_Email text, "
+					+ "Ofrecido_Telefono text, Ofrecido_Trabajo text, "
+					+ "Ofrecido_Empresa text, Ofrecido_Sueldo text, "
+					+ "Ofrecido_Universidad text, Ofrecido_Carrera text, "
+					+ "Ofrecido_Sector1 text, Ofrecido_Sector2 text, "
+					+ "Ofrecido_Experiencia text, Ofrecido_Lenguajes text, "
+					+ "Ofrecido_Conocimientos text, Requerido_Nombre text, "
+					+ "Requerido_Apellidos text, Requerido_Email text, "
+					+ "Requerido_Telefono text, Requerido_Trabajo text, "
+					+ "Requerido_Empresa text, Requerido_Sueldo text, "
+					+ "Requerido_Universidad text, Requerido_Carrera text, "
+					+ "Requerido_Sector1 text, Requerido_Sector2 text, "
+					+ "Requerido_Experiencia text, Requerido_Lenguajes text, "
+					+ "Requerido_Conocimientos text)");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -340,13 +401,57 @@ public class Main {
 		return "1";
 	}
 	
-	public static String doCreateNegotiation(Request request, Response response) {
+	public static String doCreateNegotiation(Request request, Response response) throws SQLException, UnsupportedEncodingException {
+		String sql;
 		String success = "0";
 		Statement statement;
 		
-		try {
-			connection.setAutoCommit(true);
-			HashMap<String, String> params = getRequestData(request);
+		connection.setAutoCommit(true);
+		HashMap<String, String> params = getRequestData(request);
+		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
+				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
+				+ "Ofrecido_Trabajo, Ofrecido_Empresa, Ofrecido_Sueldo, Ofrecido_Universidad, "
+				+ "Ofrecido_Carrera, Ofrecido_Sector1, Ofrecido_Sector2, Ofrecido_Experiencia, "
+				+ "Ofrecido_Lenguajes, Ofrecido_Conocimientos, Requerido_Nombre, "
+				+ "Requerido_Apellidos, Requerido_Email, Requerido_Telefono, Requerido_Trabajo, "
+				+ "Requerido_Empresa, Requerido_Sueldo, Requerido_Universidad, "
+				+ "Requerido_Carrera, Requerido_Sector1, Requerido_Sector2, "
+				+ "Requerido_Experiencia, Requerido_Lenguajes, Requerido_Conocimientos) "
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Usuario_Creador"));
+			pstmt.setString(2, params.get("Usuario_Receptor"));
+			pstmt.setString(3, params.get("Estado"));
+			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
+			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Apellidos"), "UTF-8" ));
+			pstmt.setString(6, URLDecoder.decode(params.get("Ofrecido_Email"), "UTF-8" ));
+			pstmt.setString(7, URLDecoder.decode(params.get("Ofrecido_Telefono"), "UTF-8" ));
+			pstmt.setString(8, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
+			pstmt.setString(9, URLDecoder.decode(params.get("Ofrecido_Empresa"), "UTF-8" ));
+			pstmt.setString(10, URLDecoder.decode(params.get("Ofrecido_Sueldo"), "UTF-8" ));
+			pstmt.setString(11, URLDecoder.decode(params.get("Ofrecido_Universidad"), "UTF-8" ));
+			pstmt.setString(12, URLDecoder.decode(params.get("Ofrecido_Carrera"), "UTF-8" ));
+			pstmt.setString(13, URLDecoder.decode(params.get("Ofrecido_Sector1"), "UTF-8" ));
+			pstmt.setString(14, URLDecoder.decode(params.get("Ofrecido_Sector2"), "UTF-8" ));
+			pstmt.setString(15, URLDecoder.decode(params.get("Ofrecido_Experiencia"), "UTF-8" ));
+			pstmt.setString(16, URLDecoder.decode(params.get("Ofrecido_Lenguajes"), "UTF-8" ));
+			pstmt.setString(17, URLDecoder.decode(params.get("Ofrecido_Conocimientos"), "UTF-8" ));
+			pstmt.setString(18, URLDecoder.decode(params.get("Requerido_Nombre"), "UTF-8" ));
+			pstmt.setString(19, URLDecoder.decode(params.get("Requerido_Apellidos"), "UTF-8" ));
+			pstmt.setString(20, URLDecoder.decode(params.get("Requerido_Email"), "UTF-8" ));
+			pstmt.setString(21, URLDecoder.decode(params.get("Requerido_Telefono"), "UTF-8" ));
+			pstmt.setString(22, URLDecoder.decode(params.get("Requerido_Trabajo"), "UTF-8" ));
+			pstmt.setString(23, URLDecoder.decode(params.get("Requerido_Empresa"), "UTF-8" ));
+			pstmt.setString(24, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
+			pstmt.setString(25, URLDecoder.decode(params.get("Requerido_Universidad"), "UTF-8" ));
+			pstmt.setString(26, URLDecoder.decode(params.get("Requerido_Carrera"), "UTF-8" ));
+			pstmt.setString(27, URLDecoder.decode(params.get("Requerido_Sector1"), "UTF-8" ));
+			pstmt.setString(28, URLDecoder.decode(params.get("Requerido_Sector2"), "UTF-8" ));
+			pstmt.setString(29, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
+			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
+			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
+			pstmt.executeUpdate();	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
