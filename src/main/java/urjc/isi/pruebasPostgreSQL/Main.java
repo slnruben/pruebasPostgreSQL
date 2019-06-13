@@ -405,6 +405,11 @@ public class Main {
 		System.out.println("Requerido_Nombre: " + params.get("Requerido_Nombre"));
 		
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
+				+ "Ofrecido_Trabajo, Ofrecido_Sueldo, Requerido_Nombre, Requerido_Sueldo) "
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?)";
+		
+		/**
+		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
 				+ "Ofrecido_Trabajo, Ofrecido_Empresa, Ofrecido_Sueldo, Ofrecido_Universidad, "
 				+ "Ofrecido_Carrera, Ofrecido_Sector1, Ofrecido_Sector2, Ofrecido_Experiencia, "
@@ -414,18 +419,23 @@ public class Main {
 				+ "Requerido_Carrera, Requerido_Sector1, Requerido_Sector2, "
 				+ "Requerido_Experiencia, Requerido_Lenguajes, Requerido_Conocimientos) "
 				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
-				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";*/
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Usuario_Creador"));
 			pstmt.setString(2, params.get("Usuario_Receptor"));
 			pstmt.setString(3, params.get("Estado"));
+			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
+			pstmt.setString(5, params.get("Ofrecido_Sueldo"));
+			pstmt.setString(6, URLDecoder.decode(params.get("Requerido_Nombre"), "UTF-8" ));
+			pstmt.setString(7, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
+			/**
 			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
 			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Apellidos"), "UTF-8" ));
 			pstmt.setString(6, URLDecoder.decode(params.get("Ofrecido_Email"), "UTF-8" ));
-			pstmt.setString(7, URLDecoder.decode(params.get("Ofrecido_Telefono"), "UTF-8" ));
+			pstmt.setString(7, params.get("Ofrecido_Telefono"));
 			pstmt.setString(8, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
 			pstmt.setString(9, URLDecoder.decode(params.get("Ofrecido_Empresa"), "UTF-8" ));
-			pstmt.setString(10, URLDecoder.decode(params.get("Ofrecido_Sueldo"), "UTF-8" ));
+			pstmt.setString(10, params.get("Ofrecido_Sueldo"));
 			pstmt.setString(11, URLDecoder.decode(params.get("Ofrecido_Universidad"), "UTF-8" ));
 			pstmt.setString(12, URLDecoder.decode(params.get("Ofrecido_Carrera"), "UTF-8" ));
 			pstmt.setString(13, URLDecoder.decode(params.get("Ofrecido_Sector1"), "UTF-8" ));
@@ -446,12 +456,12 @@ public class Main {
 			pstmt.setString(28, URLDecoder.decode(params.get("Requerido_Sector2"), "UTF-8" ));
 			pstmt.setString(29, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
 			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
-			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
+			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));*/
 			pstmt.executeUpdate();	
 			success = "1";
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Error doCreateNegotiation: " + e.getMessage());
+			System.out.println("Error doCreateNegotiation: " + e);
 			return "-1";
 		}
 		return success;
