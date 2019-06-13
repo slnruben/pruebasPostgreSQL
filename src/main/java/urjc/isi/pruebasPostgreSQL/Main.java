@@ -398,15 +398,10 @@ public class Main {
 		String success = "0";
 		
 		HashMap<String, String> params = getRequestData(request);
-		System.out.println("Usuario_Creador: " + params.get("Usuario_Creador"));
-		System.out.println("Usuario_Receptor: " + params.get("Usuario_Receptor"));
-		System.out.println("Estado: " + params.get("Estado"));
-		System.out.println("Ofrecido_Trabajo: " + params.get("Ofrecido_Trabajo"));
-		System.out.println("Requerido_Nombre: " + params.get("Requerido_Nombre"));
-		
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
-				+ "Ofrecido_Trabajo, Ofrecido_Sueldo, Requerido_Nombre, Requerido_Sueldo) "
-				+ "VALUES(?, ?, ?, ?, ?, ?, ?)";
+				+ "Ofrecido_Nombre, Ofrecido_Trabajo, Ofrecido_Sueldo, Requerido_Nombre, "
+				+ "Requerido_Sueldo) "
+				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		/**
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
@@ -424,10 +419,11 @@ public class Main {
 			pstmt.setString(1, params.get("Usuario_Creador"));
 			pstmt.setString(2, params.get("Usuario_Receptor"));
 			pstmt.setString(3, params.get("Estado"));
-			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
-			pstmt.setString(5, params.get("Ofrecido_Sueldo"));
-			pstmt.setString(6, URLDecoder.decode(params.get("Requerido_Nombre"), "UTF-8" ));
-			pstmt.setString(7, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
+			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
+			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
+			pstmt.setString(6, params.get("Ofrecido_Sueldo"));
+			pstmt.setString(7, URLDecoder.decode(params.get("Requerido_Nombre"), "UTF-8" ));
+			pstmt.setString(8, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
 			/**
 			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
 			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Apellidos"), "UTF-8" ));
