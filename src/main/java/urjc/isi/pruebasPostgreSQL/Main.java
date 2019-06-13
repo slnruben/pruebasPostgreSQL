@@ -399,7 +399,7 @@ public class Main {
 		
 		HashMap<String, String> params = getRequestData(request);
 		System.out.println("doCreateNegotiation: " + params.get("Usuario_Creador"));
-		/**
+		
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
 				+ "Ofrecido_Trabajo, Ofrecido_Empresa, Ofrecido_Sueldo, Ofrecido_Universidad, "
@@ -444,11 +444,12 @@ public class Main {
 			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
 			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
 			pstmt.executeUpdate();	
+			success = "1";
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return e.toString();
-		}*/
+			System.out.println("doCreateNegotiation: " + e.getMessage());
+			return "-1";
+		}
 		return success;
 	}
 
