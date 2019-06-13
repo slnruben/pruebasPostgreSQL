@@ -398,7 +398,11 @@ public class Main {
 		String success = "0";
 		
 		HashMap<String, String> params = getRequestData(request);
-		System.out.println("doCreateNegotiation: " + params.get("Usuario_Creador"));
+		System.out.println("Usuario_Creador: " + params.get("Usuario_Creador"));
+		System.out.println("Usuario_Receptor: " + params.get("Usuario_Receptor"));
+		System.out.println("Estado: " + params.get("Estado"));
+		System.out.println("Ofrecido_Trabajo: " + params.get("Ofrecido_Trabajo"));
+		System.out.println("Requerido_Nombre: " + params.get("Requerido_Nombre"));
 		
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
