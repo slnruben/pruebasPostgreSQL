@@ -11,17 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.HashMap;
-import java.util.StringTokenizer;
-
-import javax.servlet.MultipartConfigElement;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
@@ -260,6 +252,77 @@ public class Main {
 		return jsonArr;
     }
     
+    public static JSONArray doSelectMyNegotiations(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
+		JSONArray jsonArr = new JSONArray();
+		JSONObject json;
+		
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado NOT LIKE Rechazada) OR Usuario_Receptor=?");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			
+			pstmt.setString(1, URLDecoder.decode(params.get("Usuario_Creador"), "UTF-8" ));
+			pstmt.setString(2, URLDecoder.decode(params.get("Usuario_Receptor"), "UTF-8" ));
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				json = new JSONObject();
+				json.put("Id", rs.getString("id"));
+				json.put("Usuario_Creador", rs.getString("Usuario_Creador"));
+				json.put("Usuario_Receptor",rs.getString("Usuario_Receptor"));
+				json.put("Estado", rs.getString("Estado"));
+				json.put("Ofrecido_Nombre", rs.getString("Ofrecido_Nombre"));
+				json.put("Ofrecido_Apellidos", rs.getString("Ofrecido_Apellidos"));
+				json.put("Ofrecido_Email", rs.getString("Ofrecido_Email"));
+				json.put("Ofrecido_Telefono", rs.getString("Ofrecido_Telefono"));
+				json.put("Ofrecido_Trabajo", rs.getString("Ofrecido_Trabajo"));
+				json.put("Ofrecido_Empresa", rs.getString("Ofrecido_Empresa"));
+				json.put("Ofrecido_Sueldo", rs.getString("Ofrecido_Sueldo"));
+				json.put("Ofrecido_Universidad", rs.getString("Ofrecido_Universidad"));
+				json.put("Ofrecido_Carrera", rs.getString("Ofrecido_Carrera"));
+				json.put("Ofrecido_Sector1", rs.getString("Ofrecido_Sector1"));
+				json.put("Ofrecido_Sector2", rs.getString("Ofrecido_Sector2"));
+				json.put("Ofrecido_Experiencia", rs.getString("Ofrecido_Experiencia"));
+				json.put("Ofrecido_Lenguajes", rs.getString("Ofrecido_Lenguajes"));
+				json.put("Ofrecido_Conocimientos", rs.getString("Ofrecido_Conocimientos"));
+				
+				json.put("Requerido_Nombre", rs.getString("Requerido_Nombre"));
+				json.put("Requerido_Apellidos", rs.getString("Requerido_Apellidos"));
+				json.put("Requerido_Email", rs.getString("Requerido_Email"));
+				json.put("Requerido_Telefono", rs.getString("Requerido_Telefono"));
+				json.put("Requerido_Trabajo", rs.getString("Requerido_Trabajo"));
+				json.put("Requerido_Empresa", rs.getString("Requerido_Empresa"));
+				json.put("Requerido_Sueldo", rs.getString("Requerido_Sueldo"));
+				json.put("Requerido_Universidad", rs.getString("Requerido_Universidad"));
+				json.put("Requerido_Carrera", rs.getString("Requerido_Carrera"));
+				json.put("Requerido_Sector1", rs.getString("Requerido_Sector1"));
+				json.put("Requerido_Sector2", rs.getString("Requerido_Sector2"));
+				json.put("Requerido_Experiencia", rs.getString("Requerido_Experiencia"));
+				json.put("Requerido_Lenguajes", rs.getString("Requerido_Lenguajes"));
+				json.put("Requerido_Conocimientos", rs.getString("Requerido_Conocimientos"));
+				jsonArr.put(json);
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		System.out.println(jsonArr.toString());
+		return jsonArr;
+    }
+    
+    public static String doRefuseNegotiation(Request request, Response response) {
+		String success = "-1";
+		
+		HashMap<String, String> params = getRequestData(request);	
+		String sql = ("UPDATE negotiations SET Estado=? WHERE id=?");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Estado"));
+			pstmt.setString(2, params.get("Id"));
+			success = Integer.toString(pstmt.executeUpdate());
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		return success;
+    }
+    
     public static String doDeleteNegotiation(Request request, Response response) {
 		String success = "-1";
 		
@@ -291,8 +354,8 @@ public class Main {
 				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
 				+ " ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, params.get("Usuario_Creador"));
-			pstmt.setString(2, params.get("Usuario_Receptor"));
+			pstmt.setString(1, URLDecoder.decode(params.get("Usuario_Creador"), "UTF-8" ));
+			pstmt.setString(2, URLDecoder.decode(params.get("Usuario_Receptor"), "UTF-8" ));
 			pstmt.setString(3, params.get("Estado"));
 			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
 			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Apellidos"), "UTF-8" ));
@@ -492,9 +555,11 @@ public class Main {
 		
 		post("/search_contacts", Main::doSelect);
 		
-		post("/search_negotiations", Main::doSelectAllNegotiations);
+		post("/search_negotiations", Main::doSelectMyNegotiations);
 		
 		post("/create_negotiation", Main::doCreateNegotiation);	
+		
+		post("/refuse_negotiation", Main::doRefuseNegotiation);
 		
 		post("/delete_negotiation", Main::doDeleteNegotiation);
 
