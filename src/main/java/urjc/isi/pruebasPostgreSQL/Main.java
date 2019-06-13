@@ -53,8 +53,43 @@ public class Main {
 		return params;
 	}
     
-    // Used to illustrate how to route requests to methods instead of
-    // using lambda expressions
+    public static String doSelectAll(Request request, Response response) throws JSONException, SQLException {
+    	String success = "0";
+		JSONArray jsonArr = new JSONArray();
+		JSONObject json;
+		
+		//HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT * FROM users");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				json = new JSONObject();
+				json.put("id", rs.getString("id"));
+				json.put("Usuario", rs.getString("Usuario"));
+				json.put("Nombre", rs.getString("Nombre"));
+				json.put("Apellidos", rs.getString("Apellidos"));
+				json.put("Email", rs.getString("Email"));
+				json.put("Telefono", rs.getString("Telefono"));
+				json.put("Trabajo", rs.getString("Trabajo"));
+				json.put("Empresa", rs.getString("Empresa"));
+				json.put("Sueldo", rs.getString("Sueldo"));
+				json.put("Universidad", rs.getString("Universidad"));
+				json.put("Carrera", rs.getString("Carrera"));
+				json.put("Sector1", rs.getString("Sector1"));
+				json.put("Sector2", rs.getString("Sector2"));
+				json.put("Experiencia", rs.getString("Experiencia"));
+				json.put("Lenguajes", rs.getString("Lenguajes"));
+				json.put("Conocimientos", rs.getString("Conocimientos"));
+				jsonArr.put(json);
+				
+			}
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		System.out.println(jsonArr.toString());
+		return success;
+    }
+    
     public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
     	String sql;
     	String usuario;
@@ -172,47 +207,7 @@ public class Main {
 		return jsonArr;
     }
     
-    // Used to illustrate how to route requests to methods instead of
-    // using lambda expressions
-    public static String doSelectAll(Request request, Response response) throws JSONException, SQLException {
-    	String success = "0";
-		JSONArray jsonArr = new JSONArray();
-		JSONObject json;
-		
-		//HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT * FROM users");
-		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				json = new JSONObject();
-				json.put("id", rs.getString("id"));
-				json.put("Usuario", rs.getString("Usuario"));
-				json.put("Nombre", rs.getString("Nombre"));
-				json.put("Apellidos", rs.getString("Apellidos"));
-				json.put("Email", rs.getString("Email"));
-				json.put("Telefono", rs.getString("Telefono"));
-				json.put("Trabajo", rs.getString("Trabajo"));
-				json.put("Empresa", rs.getString("Empresa"));
-				json.put("Sueldo", rs.getString("Sueldo"));
-				json.put("Universidad", rs.getString("Universidad"));
-				json.put("Carrera", rs.getString("Carrera"));
-				json.put("Sector1", rs.getString("Sector1"));
-				json.put("Sector2", rs.getString("Sector2"));
-				json.put("Experiencia", rs.getString("Experiencia"));
-				json.put("Lenguajes", rs.getString("Lenguajes"));
-				json.put("Conocimientos", rs.getString("Conocimientos"));
-				jsonArr.put(json);
-				
-			}
-		} catch (SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
-		}
-		System.out.println(jsonArr.toString());
-		return success;
-    }
-    
     public static JSONArray doSelectAllNegotiations(Request request, Response response) throws JSONException, SQLException {
-    	String success = "0";
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
@@ -221,7 +216,6 @@ public class Main {
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				json = new JSONObject();
 				json = new JSONObject();
 				json.put("Id", rs.getString("id"));
 				json.put("Usuario_Creador", rs.getString("Usuario_Creador"));
@@ -266,16 +260,25 @@ public class Main {
 		return jsonArr;
     }
     
-    public static String doCreateNegotiation(Request request, Response response) throws SQLException, UnsupportedEncodingException {
-		String sql;
-		String success = "0";
+    public static String doDeleteNegotiation(Request request, Response response) {
+		String success = "-1";
 		
 		HashMap<String, String> params = getRequestData(request);
-		/*sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
-				+ "Ofrecido_Nombre, Ofrecido_Trabajo, Ofrecido_Sueldo, Requerido_Nombre, "
-				+ "Requerido_Sueldo) "
-				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?)";*/
+		String sql = ("DELETE FROM negotiations WHERE id=?");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, params.get("Id"));
+			success = Integer.toString(pstmt.executeUpdate());
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		return success;
+    }
+    
+    public static String doCreateNegotiation(Request request, Response response) throws SQLException, UnsupportedEncodingException {
+		String sql;
+		String success = "-1";
 		
+		HashMap<String, String> params = getRequestData(request);	
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
 				+ "Ofrecido_Trabajo, Ofrecido_Empresa, Ofrecido_Sueldo, Ofrecido_Universidad, "
@@ -319,12 +322,10 @@ public class Main {
 			pstmt.setString(29, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
 			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
 			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
-			pstmt.executeUpdate();	
-			success = "1";
+			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Error doCreateNegotiation: " + e);
-			return "-1";
 		}
 		return success;
 	}
@@ -494,6 +495,8 @@ public class Main {
 		post("/search_negotiations", Main::doSelectAllNegotiations);
 		
 		post("/create_negotiation", Main::doCreateNegotiation);	
+		
+		post("/delete_negotiation", Main::doDeleteNegotiation);
 
     }
 
