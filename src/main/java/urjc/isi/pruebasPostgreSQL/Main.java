@@ -67,7 +67,6 @@ public class Main {
 		JSONObject json;
 		Boolean prev = false;
 		
-		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		usuario = params.get("Usuario");
 		sueldo = params.get("Sueldo");
@@ -82,7 +81,6 @@ public class Main {
 				pstmt.setString(1, usuario);
 				ResultSet rs = pstmt.executeQuery();
 				while (rs.next()) {
-					System.out.println("USUARIO: " + rs.getString("Usuario"));
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
 					json.put("Usuario", rs.getString("Usuario"));
@@ -182,7 +180,6 @@ public class Main {
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
-		connection.setAutoCommit(true);
 		//HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM users");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -220,7 +217,6 @@ public class Main {
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
-		connection.setAutoCommit(true);
 		//HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM negotiations");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -274,7 +270,6 @@ public class Main {
     public static String doUpdateUser(Request request, Response response) throws SQLException, UnsupportedEncodingException {
 		String success = "0";
 		
-		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "UPDATE users SET Nombre=?, Apellidos=?, Email=?, Telefono=?, Trabajo=?, "
 						+ "Empresa=?, Sueldo=?, Universidad=?, Carrera=?, Sector1=?, Sector2=?, "
@@ -305,7 +300,6 @@ public class Main {
     public static String doLogin(Request request, Response response) throws JSONException, SQLException {
     	String success = "0";
 		
-		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT count(*) FROM users WHERE Usuario=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -327,7 +321,6 @@ public class Main {
 	public static String doRegister(Request request, Response response) throws SQLException {
 		String last_inserted_id = "-1";
 		
-		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
 		String sql = "SELECT COUNT(*) FROM users WHERE Usuario=?";
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -361,7 +354,6 @@ public class Main {
 		} catch (SQLException e) {
 			System.out.println("ERROR3: " + e.getMessage());
 		}
-		System.out.println("INSERTED: " + last_inserted_id);
 		return last_inserted_id;
 	}
 	
@@ -405,8 +397,9 @@ public class Main {
 		String sql;
 		String success = "0";
 		
-		connection.setAutoCommit(true);
 		HashMap<String, String> params = getRequestData(request);
+		System.out.println("doCreateNegotiation: " + params.get("Usuario_Creador"));
+		/**
 		sql = "INSERT INTO negotiations(Usuario_Creador, Usuario_Receptor, Estado, "
 				+ "Ofrecido_Nombre, Ofrecido_Apellidos, Ofrecido_Email, Ofrecido_Telefono, "
 				+ "Ofrecido_Trabajo, Ofrecido_Empresa, Ofrecido_Sueldo, Ofrecido_Universidad, "
@@ -455,148 +448,47 @@ public class Main {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return e.toString();
-		}
+		}*/
 		return success;
 	}
 
-    public static String select(Connection conn, String table, String film) {
-	String sql = "SELECT * FROM " + table + " WHERE film=?";
-
-	String result = new String();
-	
-	try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-		pstmt.setString(1, film);
-		ResultSet rs = pstmt.executeQuery();
-                // Commit after query is executed
-		connection.commit();
-
-		while (rs.next()) {
-		    // read the result set
-		    result += "film = " + rs.getString("film") + "\n";
-		    System.out.println("film = "+rs.getString("film") + "\n");
-
-		    result += "actor = " + rs.getString("actor") + "\n";
-		    System.out.println("actor = "+rs.getString("actor")+"\n");
-		}
-	    } catch (SQLException e) {
-	    System.out.println(e.getMessage());
-	}
-		return result;
-    }
-    
-    
-    public static void insert(Connection conn, String film, String actor) {
-	String sql = "INSERT INTO films(film, actor) VALUES(?,?)";
-
-		try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-			pstmt.setString(1, film);
-			pstmt.setString(2, actor);
-			pstmt.executeUpdate();
-		    } catch (SQLException e) {
-		    System.out.println(e.getMessage());
-		}
-    }
-
     public static void main(String[] args) throws 
 	ClassNotFoundException, SQLException, URISyntaxException {
-	port(getHerokuAssignedPort());
+		port(getHerokuAssignedPort());
+		
+		// This code only works for PostgreSQL in Heroku
+		// Connect to PostgreSQL in Heroku
+		URI dbUri = new URI(System.getenv("DATABASE_URL"));
+		String username = dbUri.getUserInfo().split(":")[0];
+		String password = dbUri.getUserInfo().split(":")[1];
+		String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+		connection = DriverManager.getConnection(dbUrl, username, password);
+		
+		// PostgreSQL default is to auto-commit (1 transaction / statement execution)
+	        // Set it to false to improve performance
+		connection.setAutoCommit(false);
 	
-
-	// This code only works for PostgreSQL in Heroku
-	// Connect to PostgreSQL in Heroku
-	URI dbUri = new URI(System.getenv("DATABASE_URL"));
-	String username = dbUri.getUserInfo().split(":")[0];
-	String password = dbUri.getUserInfo().split(":")[1];
-	String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
-	connection = DriverManager.getConnection(dbUrl, username, password);
-	
-	// PostgreSQL default is to auto-commit (1 transaction / statement execution)
-        // Set it to false to improve performance
-	connection.setAutoCommit(false);
-
-	get("/create_bbdd", Main::doCreateBBDD);
-	
-	get("/search_contacts", Main::doSelect);
-	
-	get("/get_contacts",  Main::doSelectAll);
-	
-	get("/get_negotiations", Main::doSelectAllNegotiations);
-	
-	get("/register", Main::doRegister);
-	
-	get("/login", Main::doLogin);
-	
-	post("/register", Main::doRegister);
-	
-	post("/login", Main::doLogin);
-	
-	post("/update_user", Main::doUpdateUser);
-	
-	post("/search_contacts", Main::doSelect);
-	
-	post("/create_negotiation", Main::doCreateNegotiation);
-
-	// In this case we use a Java 8 method reference to specify
-	// the method to be called when a GET /:table/:film HTTP request
-	// Main::doWork will return the result of the SQL select
-	// query. It could've been programmed using a lambda
-	// expression instead, as illustrated in the next sentence.
-	get("/:table/:film", Main::doSelect);
-
-	// In this case we use a Java 8 Lambda function to process the
-	// GET /upload_films HTTP request, and we return a form
-	get("/upload_films", (req, res) -> 
-	    "<form action='/upload' method='post' enctype='multipart/form-data'>" 
-	    + "    <input type='file' name='uploaded_films_file' accept='.txt'>"
-	    + "    <button>Upload file</button>" + "</form>"
-	    );
-	// You must use the name "uploaded_films_file" in the call to
-	// getPart to retrieve the uploaded file. See next call:
-
-
-	// Retrieves the file uploaded through the /upload_films HTML form
-	// Creates table and stores uploaded file in a two-columns table
-	post("/upload", (req, res) -> {
-
-		req.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/tmp"));
-
-		try (InputStream input = req.raw().getPart("uploaded_films_file").getInputStream()){ 
-			// getPart needs to use the same name "uploaded_films_file" used in the form
-
-			// Prepare SQL to create table
-			Statement statement = connection.createStatement();
-
-			// This code only works for PostgreSQL
-			statement.executeUpdate("drop table if exists films");
-			statement.executeUpdate("create table films (film text, actor text)");
-			    
-			// Read contents of input stream that holds the uploaded file
-			InputStreamReader isr = new InputStreamReader(input);
-			BufferedReader br = new BufferedReader(isr);
-			String s;
-			while ((s = br.readLine()) != null) {
-			    System.out.println(s);
-				
-			    // Tokenize the film name and then the actors, separated by "/"
-			    StringTokenizer tokenizer = new StringTokenizer(s, "/");
-				
-			    // First token is the film name(year)
-			    String film = tokenizer.nextToken();
-				
-			    // Now get actors and insert them
-			    while (tokenizer.hasMoreTokens()) {
-				insert(connection, film, tokenizer.nextToken());
-			    }
-			    // Commit only once, after all the inserts are done
-			    // If done after each statement performance degrades
-			    connection.commit();
-
-			    
-			}
-		    }
-		System.out.println("File Uploaded!");
-		return "File uploaded!";
-	    });
+		get("/create_bbdd", Main::doCreateBBDD);
+		
+		get("/search_contacts", Main::doSelect);
+		
+		get("/get_contacts",  Main::doSelectAll);
+		
+		get("/get_negotiations", Main::doSelectAllNegotiations);
+		
+		get("/register", Main::doRegister);
+		
+		get("/login", Main::doLogin);
+		
+		post("/register", Main::doRegister);
+		
+		post("/login", Main::doLogin);
+		
+		post("/update_user", Main::doUpdateUser);
+		
+		post("/search_contacts", Main::doSelect);
+		
+		post("/create_negotiation", Main::doCreateNegotiation);
 
     }
 
