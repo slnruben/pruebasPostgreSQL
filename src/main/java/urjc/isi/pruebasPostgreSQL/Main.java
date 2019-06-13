@@ -477,7 +477,7 @@ public class Main {
 		
 		get("/get_contacts",  Main::doSelectAll);
 		
-		get("/get_negotiations", Main::doSelectAllNegotiations);
+		get("/search_negotiations", Main::doSelectAllNegotiations);
 		
 		get("/register", Main::doRegister);
 		
@@ -491,9 +491,9 @@ public class Main {
 		
 		post("/search_contacts", Main::doSelect);
 		
-		post("/create_negotiation", Main::doCreateNegotiation);
+		post("/search_negotiations", Main::doSelectAllNegotiations);
 		
-		post("/get_negotiations", Main::doSelectAllNegotiations);
+		post("/create_negotiation", Main::doCreateNegotiation);	
 
     }
 
