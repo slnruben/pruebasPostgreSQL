@@ -313,14 +313,16 @@ public class Main {
     public static String doRefuseNegotiation(Request request, Response response) {
 		String success = "-1";
 		
+		
 		HashMap<String, String> params = getRequestData(request);	
+		System.out.println(params.get("Estado") + " | " + params.get("Id"));
 		String sql = ("UPDATE negotiations SET Estado=? WHERE id=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Estado"));
 			pstmt.setInt(2, Integer.parseInt(params.get("Id")));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
+			System.out.println("ERROR: " + e);
 		}
 		return success;
     }
