@@ -255,13 +255,15 @@ public class Main {
     public static JSONArray doSelectMyNegotiations(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
+		String user;
 		
 		HashMap<String, String> params = getRequestData(request);
+		user = URLDecoder.decode(params.get("Usuario"), "UTF-8" );
 		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado NOT LIKE Rechazada) OR Usuario_Receptor=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			
-			pstmt.setString(1, URLDecoder.decode(params.get("Usuario_Creador"), "UTF-8" ));
-			pstmt.setString(2, URLDecoder.decode(params.get("Usuario_Receptor"), "UTF-8" ));
+			System.out.println(params.get("Usuario"));
+			pstmt.setString(1, user);
+			pstmt.setString(2, user);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
@@ -302,7 +304,7 @@ public class Main {
 				
 			}
 		} catch (SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
+			System.out.println("ERROR: " + e);
 		}
 		System.out.println(jsonArr.toString());
 		return jsonArr;
