@@ -259,9 +259,8 @@ public class Main {
 		
 		HashMap<String, String> params = getRequestData(request);
 		user = URLDecoder.decode(params.get("Usuario"), "UTF-8" );
-		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado NOT LIKE Rechazada) OR Usuario_Receptor=?");
+		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado!=Rechazada) OR Usuario_Receptor=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			System.out.println(params.get("Usuario"));
 			pstmt.setString(1, user);
 			pstmt.setString(2, user);
 			ResultSet rs = pstmt.executeQuery();
@@ -534,8 +533,8 @@ public class Main {
 		connection = DriverManager.getConnection(dbUrl, username, password);
 		
 		// PostgreSQL default is to auto-commit (1 transaction / statement execution)
-	        // Set it to false to improve performance
-		connection.setAutoCommit(false);
+	    // Set it to false to improve performance
+		connection.setAutoCommit(true);
 	
 		get("/create_bbdd", Main::doCreateBBDD);
 		
