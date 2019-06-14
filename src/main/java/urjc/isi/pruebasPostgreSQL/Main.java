@@ -262,7 +262,7 @@ public class Main {
 		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado NOT LIKE ?) OR Usuario_Receptor=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, user);
-			pstmt.setString(2, "Rechazada");
+			pstmt.setString(2, URLDecoder.decode(params.get("Estado"), "UTF-8" ));
 			pstmt.setString(3, user);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -317,7 +317,7 @@ public class Main {
 		String sql = ("UPDATE negotiations SET Estado=? WHERE id=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Estado"));
-			pstmt.setString(2, params.get("Id"));
+			pstmt.setInt(2, Integer.parseInt(params.get("Id")));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
@@ -331,7 +331,7 @@ public class Main {
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("DELETE FROM negotiations WHERE id=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, params.get("Id"));
+			pstmt.setInt(1, Integer.parseInt(params.get("Id")));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
