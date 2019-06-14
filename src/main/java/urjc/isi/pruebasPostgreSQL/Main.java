@@ -537,8 +537,6 @@ public class Main {
 	
 		get("/create_bbdd", Main::doCreateBBDD);
 		
-		get("/search_contacts", Main::doSelect);
-		
 		get("/get_contacts",  Main::doSelectAll);
 		
 		get("/search_negotiations", Main::doSelectAllNegotiations);
