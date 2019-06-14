@@ -259,10 +259,11 @@ public class Main {
 		
 		HashMap<String, String> params = getRequestData(request);
 		user = URLDecoder.decode(params.get("Usuario"), "UTF-8" );
-		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado!=Rechazada) OR Usuario_Receptor=?");
+		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado NOT LIKE ?) OR Usuario_Receptor=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, user);
-			pstmt.setString(2, user);
+			pstmt.setString(2, "Rechazada");
+			pstmt.setString(3, user);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
