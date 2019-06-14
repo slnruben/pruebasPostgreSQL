@@ -259,11 +259,11 @@ public class Main {
 		
 		HashMap<String, String> params = getRequestData(request);
 		user = URLDecoder.decode(params.get("Usuario"), "UTF-8" );
-		String sql = ("SELECT * FROM negotiations WHERE (Usuario_Creador=? AND Estado NOT LIKE ?) OR Usuario_Receptor=?");
+		String sql = ("SELECT * FROM negotiations WHERE Usuario_Creador=? OR (Usuario_Receptor=? AND Estado NOT LIKE ?)");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, user);
-			pstmt.setString(2, URLDecoder.decode(params.get("Estado"), "UTF-8" ));
-			pstmt.setString(3, user);
+			pstmt.setString(2, user);
+			pstmt.setString(3, URLDecoder.decode(params.get("Estado"), "UTF-8" ));
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
 				json = new JSONObject();
@@ -315,7 +315,6 @@ public class Main {
 		
 		
 		HashMap<String, String> params = getRequestData(request);	
-		System.out.println(params.get("Estado") + " | " + params.get("Id"));
 		String sql = ("UPDATE negotiations SET Estado=? WHERE id=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, params.get("Estado"));
