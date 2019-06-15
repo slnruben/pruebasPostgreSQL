@@ -343,6 +343,14 @@ public class Main {
     public static String doAcceptNegotiation(Request request, Response response) throws UnsupportedEncodingException {
     	String success = "-1";
     	HashMap<String, String> params = getRequestData(request);
+    	System.out.println("PUFFF");
+    	/**
+    	System.out.println(params.get("Requerido_Nombre") + " " + params.get("Requerido_Apellidos")
+    					+ " " + params.get("Requerido_Email") + " " + params.get("Requerido_Nombre")
+    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre")
+    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre")
+    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre")
+    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre"));*/
 		String sql = "UPDATE negotiations SET Estado=?, Requerido_Nombre=?, Requerido_Apellidos=?, "
 				+ "Requerido_Email=?, Requerido_Telefono=?, Requerido_Trabajo=?, "
 				+ "Requerido_Empresa=?, Requerido_Sueldo=?, Requerido_Universidad=?, Requerido_Carrera=?, "
@@ -359,11 +367,12 @@ public class Main {
 			pstmt.setString(8, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
 			pstmt.setString(9, URLDecoder.decode(params.get("Requerido_Universidad"), "UTF-8" ));
 			pstmt.setString(10, URLDecoder.decode(params.get("Requerido_Carrera"), "UTF-8" ));
-			pstmt.setString(27, URLDecoder.decode(params.get("Requerido_Sector1"), "UTF-8" ));
-			pstmt.setString(28, URLDecoder.decode(params.get("Requerido_Sector2"), "UTF-8" ));
-			pstmt.setString(29, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
-			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
-			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
+			pstmt.setString(11, URLDecoder.decode(params.get("Requerido_Sector1"), "UTF-8" ));
+			pstmt.setString(12, URLDecoder.decode(params.get("Requerido_Sector2"), "UTF-8" ));
+			pstmt.setString(13, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
+			pstmt.setString(14, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
+			pstmt.setString(15, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
+			pstmt.setInt(16, Integer.parseInt(params.get("Id")));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e);
