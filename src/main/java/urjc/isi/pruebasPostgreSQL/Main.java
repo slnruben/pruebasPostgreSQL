@@ -340,6 +340,38 @@ public class Main {
 		return success;
     }
     
+    public static String doAcceptNegotiation(Request request, Response response) {
+    	String success = "-1";
+    	HashMap<String, String> params = getRequestData(request);
+		String sql = "UPDATE negotiations SET Estado=?, Requerido_Nombre=?, Requerido_Apellidos=?, "
+				+ "Requerido_Email=?, Requerido_Telefono=?, Requerido_Trabajo=?, "
+				+ "Requerido_Empresa=?, Requerido_Sueldo=?, Requerido_Universidad=?, Requerido_Carrera=?, "
+				+ "Requerido_Sector1=?, Requerido_Sector2=?, Requerido_Experiencia=?, "
+				+ "Requerido_Lenguajes=?, Requerido_Conocimientos=? WHERE id=?";
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setInt(1, Integer.parseInt(params.get("Estado")));
+			pstmt.setInt(2, Integer.parseInt(params.get("Requerido_Nombre")));
+			pstmt.setInt(3, Integer.parseInt(params.get("Requerido_Apellidos")));
+			pstmt.setInt(4, Integer.parseInt(params.get("Requerido_Email")));
+			pstmt.setInt(5, Integer.parseInt(params.get("Requerido_Telefono")));
+			pstmt.setInt(6, Integer.parseInt(params.get("Requerido_Trabajo")));
+			pstmt.setInt(7, Integer.parseInt(params.get("Requerido_Empresa")));
+			pstmt.setInt(8, Integer.parseInt(params.get("Requerido_Sueldo")));
+			pstmt.setInt(9, Integer.parseInt(params.get("Requerido_Universidad")));
+			pstmt.setInt(10, Integer.parseInt(params.get("Requerido_Carrera")));
+			pstmt.setInt(11, Integer.parseInt(params.get("Requerido_Sector1")));
+			pstmt.setInt(12, Integer.parseInt(params.get("Requerido_Sector2")));
+			pstmt.setInt(13, Integer.parseInt(params.get("Requerido_Experiencia")));
+			pstmt.setInt(14, Integer.parseInt(params.get("Requerido_Lenguajes")));
+			pstmt.setInt(15, Integer.parseInt(params.get("Requerido_Conocimientos")));
+			pstmt.setInt(16, Integer.parseInt(params.get("Id")));
+			success = Integer.toString(pstmt.executeUpdate());
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+    	return success;
+    }
+    
     public static String doCreateNegotiation(Request request, Response response) throws SQLException, UnsupportedEncodingException {
 		String sql;
 		String success = "-1";
@@ -559,6 +591,8 @@ public class Main {
 		post("/search_negotiations", Main::doSelectMyNegotiations);
 		
 		post("/create_negotiation", Main::doCreateNegotiation);	
+		
+		post("/accept_negotiation", Main::doAcceptNegotiation);
 		
 		post("/refuse_negotiation", Main::doRefuseNegotiation);
 		
