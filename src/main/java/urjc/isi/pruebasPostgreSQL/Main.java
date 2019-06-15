@@ -340,7 +340,7 @@ public class Main {
 		return success;
     }
     
-    public static String doAcceptNegotiation(Request request, Response response) {
+    public static String doAcceptNegotiation(Request request, Response response) throws UnsupportedEncodingException {
     	String success = "-1";
     	HashMap<String, String> params = getRequestData(request);
 		String sql = "UPDATE negotiations SET Estado=?, Requerido_Nombre=?, Requerido_Apellidos=?, "
@@ -349,25 +349,24 @@ public class Main {
 				+ "Requerido_Sector1=?, Requerido_Sector2=?, Requerido_Experiencia=?, "
 				+ "Requerido_Lenguajes=?, Requerido_Conocimientos=? WHERE id=?";
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setInt(1, Integer.parseInt(params.get("Estado")));
-			pstmt.setInt(2, Integer.parseInt(params.get("Requerido_Nombre")));
-			pstmt.setInt(3, Integer.parseInt(params.get("Requerido_Apellidos")));
-			pstmt.setInt(4, Integer.parseInt(params.get("Requerido_Email")));
-			pstmt.setInt(5, Integer.parseInt(params.get("Requerido_Telefono")));
-			pstmt.setInt(6, Integer.parseInt(params.get("Requerido_Trabajo")));
-			pstmt.setInt(7, Integer.parseInt(params.get("Requerido_Empresa")));
-			pstmt.setInt(8, Integer.parseInt(params.get("Requerido_Sueldo")));
-			pstmt.setInt(9, Integer.parseInt(params.get("Requerido_Universidad")));
-			pstmt.setInt(10, Integer.parseInt(params.get("Requerido_Carrera")));
-			pstmt.setInt(11, Integer.parseInt(params.get("Requerido_Sector1")));
-			pstmt.setInt(12, Integer.parseInt(params.get("Requerido_Sector2")));
-			pstmt.setInt(13, Integer.parseInt(params.get("Requerido_Experiencia")));
-			pstmt.setInt(14, Integer.parseInt(params.get("Requerido_Lenguajes")));
-			pstmt.setInt(15, Integer.parseInt(params.get("Requerido_Conocimientos")));
-			pstmt.setInt(16, Integer.parseInt(params.get("Id")));
+			pstmt.setString(1, params.get("Estado"));
+			pstmt.setString(2, URLDecoder.decode(params.get("Requerido_Nombre"), "UTF-8" ));
+			pstmt.setString(3, URLDecoder.decode(params.get("Requerido_Apellidos"), "UTF-8" ));
+			pstmt.setString(4, URLDecoder.decode(params.get("Requerido_Email"), "UTF-8" ));
+			pstmt.setString(5, URLDecoder.decode(params.get("Requerido_Telefono"), "UTF-8" ));
+			pstmt.setString(6, URLDecoder.decode(params.get("Requerido_Trabajo"), "UTF-8" ));
+			pstmt.setString(7, URLDecoder.decode(params.get("Requerido_Empresa"), "UTF-8" ));
+			pstmt.setString(8, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
+			pstmt.setString(9, URLDecoder.decode(params.get("Requerido_Universidad"), "UTF-8" ));
+			pstmt.setString(10, URLDecoder.decode(params.get("Requerido_Carrera"), "UTF-8" ));
+			pstmt.setString(27, URLDecoder.decode(params.get("Requerido_Sector1"), "UTF-8" ));
+			pstmt.setString(28, URLDecoder.decode(params.get("Requerido_Sector2"), "UTF-8" ));
+			pstmt.setString(29, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
+			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
+			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
+			System.out.println("ERROR: " + e);
 		}
     	return success;
     }
