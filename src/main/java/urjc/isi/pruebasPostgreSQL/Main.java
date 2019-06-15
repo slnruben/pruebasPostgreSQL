@@ -344,13 +344,15 @@ public class Main {
     	String success = "-1";
     	HashMap<String, String> params = getRequestData(request);
     	System.out.println("PUFFF");
-    	/**
+    	
     	System.out.println(params.get("Requerido_Nombre") + " " + params.get("Requerido_Apellidos")
-    					+ " " + params.get("Requerido_Email") + " " + params.get("Requerido_Nombre")
-    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre")
-    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre")
-    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre")
-    					+ " " + params.get("Requerido_Nombre") + " " + params.get("Requerido_Nombre"));*/
+    					+ " " + params.get("Requerido_Email") + " " + params.get("Requerido_Telefono")
+    					+ " " + params.get("Requerido_Trabajo") + " " + params.get("Requerido_Empresa")
+    					+ " " + params.get("Requerido_Sueldo") + " " + params.get("Requerido_Universidad")
+    					+ " " + params.get("Requerido_Carrera") + " " + params.get("Requerido_Sector1")
+    					+ " " + params.get("Requerido_Sector2") + " " + params.get("Requerido_Experiencia")
+    					+ " " + params.get("Requerido_Lenguajes") + " " + params.get("Requerido_Conocimientos")
+    					+ " " + params.get("Id"));
 		String sql = "UPDATE negotiations SET Estado=?, Requerido_Nombre=?, Requerido_Apellidos=?, "
 				+ "Requerido_Email=?, Requerido_Telefono=?, Requerido_Trabajo=?, "
 				+ "Requerido_Empresa=?, Requerido_Sueldo=?, Requerido_Universidad=?, Requerido_Carrera=?, "
@@ -377,6 +379,7 @@ public class Main {
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e);
 		}
+		System.out.println("SUCCESS: " + success);
     	return success;
     }
     
