@@ -46,13 +46,14 @@ public class Main {
 		return params;
 	}
     
-    public static String doGetUserPublicKey(Request request, Response response) throws UnsupportedEncodingException {
+    public static String doGetUserPublicKey(Request request, Response response) {
 		String publicKey = "-1";
 		
 		System.out.println("HOLA");
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM users WHERE Usuario LIKE ?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			System.out.println("IH");
 			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
 			System.out.println("EH");
 			ResultSet rs = pstmt.executeQuery();
@@ -63,6 +64,8 @@ public class Main {
 			System.out.println("OH");
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("ERROR: " + e);
 		}
 		System.out.println(publicKey);
 		return publicKey;
@@ -134,6 +137,7 @@ public class Main {
 				while (rs.next()) {
 					json = new JSONObject();
 					json.put("Id", rs.getString("id"));
+					json.put("Clave_Publica", rs.getString("Clave_Publica"));
 					json.put("Usuario", rs.getString("Usuario"));
 					json.put("Nombre",rs.getString("Nombre"));
 					json.put("Apellidos", rs.getString("Apellidos"));
@@ -199,6 +203,7 @@ public class Main {
 					System.out.println("USUARIO: " + rs2.getString("Usuario"));
 					json = new JSONObject();
 					json.put("Id", rs2.getString("id"));
+					json.put("Clave_Publica", rs2.getString("Clave_Publica"));
 					json.put("Usuario", rs2.getString("Usuario"));
 					json.put("Nombre", rs2.getString("Nombre"));
 					json.put("Apellidos", rs2.getString("Apellidos"));
