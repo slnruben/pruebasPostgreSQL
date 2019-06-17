@@ -46,13 +46,30 @@ public class Main {
 		return params;
 	}
     
-    public static String doGetUserPublicKey(Request request, Response response) {
+    public static String doGetUserPublicKey(Request request, Response response) throws UnsupportedEncodingException {
+		String publicKey = "-1";
+		
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT Clave_Publica FROM users WHERE Usuario=?");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			publicKey = rs.getString("Clave_Publica");	
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		System.out.println(publicKey);
+		return publicKey;
+    }
+    
+    public static String doSelectAll(Request request, Response response) throws JSONException {
     	String success = "0";
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
 		//HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT * FROM users WHERE Usuario=?");
+		String sql = ("SELECT * FROM users");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -81,23 +98,6 @@ public class Main {
 		}
 		System.out.println(jsonArr.toString());
 		return success;
-    }
-    
-    public static String doSelectAll(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
-    	String publicKey = "-1";
-		
-		HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT Clave_Publica FROM users");
-		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
-			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			publicKey = rs.getString("Clave_Publica");	
-		} catch (SQLException e) {
-			System.out.println("ERROR: " + e.getMessage());
-		}
-		System.out.println(publicKey);
-		return publicKey;
     }
     
     public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
