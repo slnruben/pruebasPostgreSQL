@@ -368,7 +368,7 @@ public class Main {
     }
     
     public static String doAcceptNegotiation(Request request, Response response) throws UnsupportedEncodingException {
-    	String success = "-1";
+    	String success = "1";
     	HashMap<String, String> params = getRequestData(request);
     	System.out.println("PUFFF");
     	
@@ -402,9 +402,10 @@ public class Main {
 			pstmt.setString(14, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
 			pstmt.setString(15, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
 			pstmt.setInt(16, Integer.parseInt(params.get("Id")));
-			success = Integer.toString(pstmt.executeUpdate());
+			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e);
+			success = "-1";
 		}
 		System.out.println("SUCCESS: " + success);
     	return success;
