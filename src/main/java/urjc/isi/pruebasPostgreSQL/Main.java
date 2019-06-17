@@ -54,8 +54,11 @@ public class Main {
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
 			ResultSet rs = pstmt.executeQuery();
-			rs.next();
-			publicKey = rs.getString("Clave_Publica");	
+			System.out.println("AH");
+			while (rs.next()) {
+				publicKey = rs.getString("Clave_Publica");	
+			}
+			System.out.println("OH");
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
 		}
@@ -75,6 +78,7 @@ public class Main {
 			while (rs.next()) {
 				json = new JSONObject();
 				json.put("id", rs.getString("id"));
+				json.put("Clave_Publica", rs.getString("Clave_Publica"));
 				json.put("Usuario", rs.getString("Usuario"));
 				json.put("Nombre", rs.getString("Nombre"));
 				json.put("Apellidos", rs.getString("Apellidos"));
