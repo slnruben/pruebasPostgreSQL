@@ -354,7 +354,7 @@ public class Main {
     }
     
     public static String doDeleteNegotiation(Request request, Response response) {
-		String success = "-1";
+		String success = "1";
 		
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("DELETE FROM negotiations WHERE id=?");
@@ -363,6 +363,7 @@ public class Main {
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
+			success = "-1";
 		}
 		return success;
     }
