@@ -50,9 +50,10 @@ public class Main {
 		String publicKey = "-1";
 		
 		HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT Clave_Publica FROM users WHERE Usuario=?");
+		String sql = ("SELECT Clave_Publica FROM users WHERE Usuario LIKE ?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
+			System.out.println("EH");
 			ResultSet rs = pstmt.executeQuery();
 			System.out.println("AH");
 			while (rs.next()) {
