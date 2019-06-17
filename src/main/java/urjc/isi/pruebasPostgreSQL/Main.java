@@ -524,8 +524,8 @@ public class Main {
 					sql = "INSERT INTO users(Usuario, Clave_Publica, Sueldo) VALUES(?, ?, ?)";
 					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
 						pstmt2.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
-						pstmt2.setString(1, URLDecoder.decode(params.get("Clave_Publica"), "UTF-8" ));
-						pstmt2.setString(2, URLDecoder.decode(params.get("Sueldo"), "UTF-8" ));
+						pstmt2.setString(2, URLDecoder.decode(params.get("Clave_Publica"), "UTF-8" ));
+						pstmt2.setString(3, URLDecoder.decode(params.get("Sueldo"), "UTF-8" ));
 						pstmt2.executeUpdate();			
 					} catch (SQLException e) {
 						System.out.println("ERROR1: " + e.getMessage());
