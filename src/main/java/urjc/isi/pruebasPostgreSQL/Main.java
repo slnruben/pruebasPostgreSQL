@@ -49,8 +49,9 @@ public class Main {
     public static String doGetUserPublicKey(Request request, Response response) throws UnsupportedEncodingException {
 		String publicKey = "-1";
 		
+		System.out.println("HOLA");
 		HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT Clave_Publica FROM users WHERE Usuario LIKE ?");
+		String sql = ("SELECT * FROM users WHERE Usuario LIKE ?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
 			System.out.println("EH");
