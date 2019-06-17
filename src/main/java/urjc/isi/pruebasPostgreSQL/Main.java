@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import java.util.Arrays;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,13 +46,13 @@ public class Main {
 		return params;
 	}
     
-    public static String doSelectAll(Request request, Response response) throws JSONException, SQLException {
+    public static String doGetUserPublicKey(Request request, Response response) {
     	String success = "0";
 		JSONArray jsonArr = new JSONArray();
 		JSONObject json;
 		
 		//HashMap<String, String> params = getRequestData(request);
-		String sql = ("SELECT * FROM users");
+		String sql = ("SELECT * FROM users WHERE Usuario=?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
@@ -80,6 +81,23 @@ public class Main {
 		}
 		System.out.println(jsonArr.toString());
 		return success;
+    }
+    
+    public static String doSelectAll(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
+    	String publicKey = "-1";
+		
+		HashMap<String, String> params = getRequestData(request);
+		String sql = ("SELECT Clave_Publica FROM users");
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
+			ResultSet rs = pstmt.executeQuery();
+			rs.next();
+			publicKey = rs.getString("Clave_Publica");	
+		} catch (SQLException e) {
+			System.out.println("ERROR: " + e.getMessage());
+		}
+		System.out.println(publicKey);
+		return publicKey;
     }
     
     public static JSONArray doSelect(Request request, Response response) throws JSONException, SQLException, UnsupportedEncodingException {
@@ -503,9 +521,10 @@ public class Main {
 					System.out.println("REPETIDO: " + rs.getInt(1));
 					last_inserted_id = "-1";
 				} else {
-					sql = "INSERT INTO users(Usuario, Sueldo) VALUES(?, ?)";
+					sql = "INSERT INTO users(Usuario, Clave_Publica, Sueldo) VALUES(?, ?, ?)";
 					try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {
 						pstmt2.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
+						pstmt2.setString(1, URLDecoder.decode(params.get("Clave_Publica"), "UTF-8" ));
 						pstmt2.setString(2, URLDecoder.decode(params.get("Sueldo"), "UTF-8" ));
 						pstmt2.executeUpdate();			
 					} catch (SQLException e) {
@@ -534,9 +553,9 @@ public class Main {
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate("drop table if exists users");
-			statement.executeUpdate("create table users (id SERIAL PRIMARY KEY, Usuario text, Nombre text, "
-					+ "Apellidos text, Email text, Telefono text, Trabajo text,"
-					+ "Empresa text, Sueldo text, Universidad text, Carrera text,"
+			statement.executeUpdate("create table users (id SERIAL PRIMARY KEY, Usuario text, "
+					+ "Clave_Publica text, Nombre text, Apellidos text, Email text, Telefono text, "
+					+ "Trabajo text, Empresa text, Sueldo text, Universidad text, Carrera text,"
 					+ "Sector1 text, Sector2 text, Experiencia text, Lenguajes text,"
 					+ "Conocimientos text)");
 			statement.executeUpdate("drop table if exists negotiations");
@@ -608,6 +627,10 @@ public class Main {
 		post("/refuse_negotiation", Main::doRefuseNegotiation);
 		
 		post("/delete_negotiation", Main::doDeleteNegotiation);
+		
+		get("/get_user_public_key", Main::doGetUserPublicKey);
+		
+		post("/get_user_public_key", Main::doGetUserPublicKey);
 
     }
 
