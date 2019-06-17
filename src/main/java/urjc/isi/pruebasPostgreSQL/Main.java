@@ -29,7 +29,6 @@ public class Main {
     private static Connection connection;
 
     private static HashMap<String, String> getRequestData(Request request) {
-		//System.out.println(request.body());
 		String[] aux1 = request.body().split("&");
 		HashMap<String, String> params = new HashMap<>();
 		String[] aux2;
@@ -47,25 +46,19 @@ public class Main {
     public static String doGetUserPublicKey(Request request, Response response) {
 		String publicKey = "-1";
 		
-		System.out.println("HOLA");
 		HashMap<String, String> params = getRequestData(request);
 		String sql = ("SELECT * FROM users WHERE Usuario LIKE ?");
 		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			System.out.println("IH");
 			pstmt.setString(1, URLDecoder.decode(params.get("Usuario"), "UTF-8" ));
-			System.out.println("EH");
 			ResultSet rs = pstmt.executeQuery();
-			System.out.println("AH");
 			while (rs.next()) {
 				publicKey = rs.getString("Clave_Publica");	
 			}
-			System.out.println("OH");
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
 		} catch (UnsupportedEncodingException e) {
 			System.out.println("ERROR: " + e);
 		}
-		System.out.println(publicKey);
 		return publicKey;
     }
     
@@ -103,7 +96,6 @@ public class Main {
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
 		}
-		System.out.println(jsonArr.toString());
 		return success;
     }
     
@@ -198,7 +190,6 @@ public class Main {
 			try (PreparedStatement pstmt2 = connection.prepareStatement(sql)) {	
 				ResultSet rs2 = pstmt2.executeQuery();
 				while (rs2.next()) {
-					System.out.println("USUARIO: " + rs2.getString("Usuario"));
 					json = new JSONObject();
 					json.put("Id", rs2.getString("id"));
 					json.put("Clave_Publica", rs2.getString("Clave_Publica"));
@@ -275,7 +266,6 @@ public class Main {
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e.getMessage());
 		}
-		System.out.println(jsonArr.toString());
 		return jsonArr;
     }
     
@@ -333,7 +323,6 @@ public class Main {
 		} catch (SQLException e) {
 			System.out.println("ERROR: " + e);
 		}
-		System.out.println(jsonArr.toString());
 		return jsonArr;
     }
     
@@ -371,16 +360,7 @@ public class Main {
     public static String doAcceptNegotiation(Request request, Response response) throws UnsupportedEncodingException {
     	String success = "1";
     	HashMap<String, String> params = getRequestData(request);
-    	System.out.println("PUFFF");
     	
-    	System.out.println(params.get("Requerido_Nombre") + " " + params.get("Requerido_Apellidos")
-    					+ " " + params.get("Requerido_Email") + " " + params.get("Requerido_Telefono")
-    					+ " " + params.get("Requerido_Trabajo") + " " + params.get("Requerido_Empresa")
-    					+ " " + params.get("Requerido_Sueldo") + " " + params.get("Requerido_Universidad")
-    					+ " " + params.get("Requerido_Carrera") + " " + params.get("Requerido_Sector1")
-    					+ " " + params.get("Requerido_Sector2") + " " + params.get("Requerido_Experiencia")
-    					+ " " + params.get("Requerido_Lenguajes") + " " + params.get("Requerido_Conocimientos")
-    					+ " " + params.get("Id"));
 		String sql = "UPDATE negotiations SET Estado=?, Requerido_Nombre=?, Requerido_Apellidos=?, "
 				+ "Requerido_Email=?, Requerido_Telefono=?, Requerido_Trabajo=?, "
 				+ "Requerido_Empresa=?, Requerido_Sueldo=?, Requerido_Universidad=?, Requerido_Carrera=?, "
@@ -408,7 +388,6 @@ public class Main {
 			System.out.println("ERROR: " + e);
 			success = "-1";
 		}
-		System.out.println("SUCCESS: " + success);
     	return success;
     }
     
@@ -528,7 +507,6 @@ public class Main {
 			ResultSet rs = pstmt.executeQuery();
 			if (rs.next()) {
 				if (rs.getInt(1) != 0) {
-					System.out.println("REPETIDO: " + rs.getInt(1));
 					last_inserted_id = "-1";
 				} else {
 					sql = "INSERT INTO users(Usuario, Clave_Publica, Sueldo) VALUES(?, ?, ?)";
