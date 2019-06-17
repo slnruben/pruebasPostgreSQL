@@ -3,14 +3,12 @@ package urjc.isi.pruebasPostgreSQL;
 import static spark.Spark.*;
 import spark.Request;
 import spark.Response;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.util.Arrays;
 import java.util.HashMap;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -462,7 +460,6 @@ public class Main {
 			pstmt.setString(31, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
 			success = Integer.toString(pstmt.executeUpdate());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println("Error doCreateNegotiation: " + e);
 		}
 		return success;
@@ -588,7 +585,6 @@ public class Main {
 					+ "Requerido_Experiencia text, Requerido_Lenguajes text, "
 					+ "Requerido_Conocimientos text)");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return e.toString();
 		}
@@ -641,7 +637,7 @@ public class Main {
 		
 		get("/get_user_public_key", Main::doGetUserPublicKey);
 		
-		post("/get_user_public_key", Main::doGetUserPublicKey);
+		post("/get_contact_public_key", Main::doGetUserPublicKey);
 
     }
 
