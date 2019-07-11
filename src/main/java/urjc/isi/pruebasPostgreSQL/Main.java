@@ -357,6 +357,60 @@ public class Main {
 		return success;
     }
     
+    public static String doUpdateNegotiation(Request request, Response response) throws UnsupportedEncodingException {
+    	String sql;
+		String success = "1";
+		
+		HashMap<String, String> params = getRequestData(request);	
+		sql = "UPDATE negotiations SET Usuario_Creador=?, Usuario_Receptor=?, Ofrecido_Nombre=?, "
+				+ "Ofrecido_Apellidos=?, Ofrecido_Email=?, Ofrecido_Telefono=?, Ofrecido_Trabajo=?, "
+				+ "Ofrecido_Empresa=?, Ofrecido_Sueldo=?, Ofrecido_Universidad=?, Ofrecido_Carrera=?, "
+				+ "Ofrecido_Sector1=?, Ofrecido_Sector2=?, Ofrecido_Experiencia=?, "
+				+ "Ofrecido_Lenguajes=?, Ofrecido_Conocimientos=?, Requerido_Nombre=?, "
+				+ "Requerido_Apellidos=?, Requerido_Email=?, Requerido_Telefono=?, Requerido_Trabajo=?, "
+				+ "Requerido_Empresa=?, Requerido_Sueldo=?, Requerido_Universidad=?, Requerido_Carrera=?, "
+				+ "Requerido_Sector1=?, Requerido_Sector2=?, Requerido_Experiencia=?, "
+				+ "Requerido_Lenguajes=?, Requerido_Conocimientos=? WHERE id=?";
+		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+			pstmt.setString(1, URLDecoder.decode(params.get("Usuario_Creador"), "UTF-8" ));
+			pstmt.setString(2, URLDecoder.decode(params.get("Usuario_Receptor"), "UTF-8" ));
+			pstmt.setString(3, URLDecoder.decode(params.get("Ofrecido_Nombre"), "UTF-8" ));
+			pstmt.setString(4, URLDecoder.decode(params.get("Ofrecido_Apellidos"), "UTF-8" ));
+			pstmt.setString(5, URLDecoder.decode(params.get("Ofrecido_Email"), "UTF-8" ));	
+			pstmt.setString(6, URLDecoder.decode(params.get("Ofrecido_Telefono"), "UTF-8" ));
+			pstmt.setString(7, URLDecoder.decode(params.get("Ofrecido_Trabajo"), "UTF-8" ));
+			pstmt.setString(8, URLDecoder.decode(params.get("Ofrecido_Empresa"), "UTF-8" ));
+			pstmt.setString(9, URLDecoder.decode(params.get("Ofrecido_Sueldo"), "UTF-8" ));
+			pstmt.setString(10, URLDecoder.decode(params.get("Ofrecido_Universidad"), "UTF-8" ));
+			pstmt.setString(11, URLDecoder.decode(params.get("Ofrecido_Carrera"), "UTF-8" ));
+			pstmt.setString(12, URLDecoder.decode(params.get("Ofrecido_Sector1"), "UTF-8" ));
+			pstmt.setString(13, URLDecoder.decode(params.get("Ofrecido_Sector2"), "UTF-8" ));
+			pstmt.setString(14, URLDecoder.decode(params.get("Ofrecido_Experiencia"), "UTF-8" ));
+			pstmt.setString(15, URLDecoder.decode(params.get("Ofrecido_Lenguajes"), "UTF-8" ));
+			pstmt.setString(16, URLDecoder.decode(params.get("Ofrecido_Conocimientos"), "UTF-8" ));
+			pstmt.setString(17, URLDecoder.decode(params.get("Requerido_Nombre"), "UTF-8" ));
+			pstmt.setString(18, URLDecoder.decode(params.get("Requerido_Apellidos"), "UTF-8" ));
+			pstmt.setString(19, URLDecoder.decode(params.get("Requerido_Email"), "UTF-8" ));
+			pstmt.setString(20, URLDecoder.decode(params.get("Requerido_Telefono"), "UTF-8" ));
+			pstmt.setString(21, URLDecoder.decode(params.get("Requerido_Trabajo"), "UTF-8" ));
+			pstmt.setString(22, URLDecoder.decode(params.get("Requerido_Empresa"), "UTF-8" ));
+			pstmt.setString(23, URLDecoder.decode(params.get("Requerido_Sueldo"), "UTF-8" ));
+			pstmt.setString(24, URLDecoder.decode(params.get("Requerido_Universidad"), "UTF-8" ));
+			pstmt.setString(25, URLDecoder.decode(params.get("Requerido_Carrera"), "UTF-8" ));
+			pstmt.setString(26, URLDecoder.decode(params.get("Requerido_Sector1"), "UTF-8" ));
+			pstmt.setString(27, URLDecoder.decode(params.get("Requerido_Sector2"), "UTF-8" ));
+			pstmt.setString(28, URLDecoder.decode(params.get("Requerido_Experiencia"), "UTF-8" ));
+			pstmt.setString(29, URLDecoder.decode(params.get("Requerido_Lenguajes"), "UTF-8" ));
+			pstmt.setString(30, URLDecoder.decode(params.get("Requerido_Conocimientos"), "UTF-8" ));
+			pstmt.setInt(31, Integer.parseInt(params.get("Id")));
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("Error doCreateNegotiation: " + e);
+			success = "-1";
+		}
+		return success;
+    }
+    
     public static String doAcceptNegotiation(Request request, Response response) throws UnsupportedEncodingException {
     	String success = "1";
     	HashMap<String, String> params = getRequestData(request);
@@ -614,6 +668,8 @@ public class Main {
 		post("/refuse_negotiation", Main::doRefuseNegotiation);
 		
 		post("/delete_negotiation", Main::doDeleteNegotiation);
+		
+		post("/update_negotiation", Main::doUpdateNegotiation);
 		
 		get("/get_user_public_key", Main::doGetUserPublicKey);
 		
